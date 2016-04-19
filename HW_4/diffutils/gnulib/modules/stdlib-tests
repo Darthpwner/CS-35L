@@ -1,0 +1,12 @@
+Files:
+tests/test-stdlib.c
+
+Depends-on:
+verify
+stdlib-c++-tests
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-stdlib
+check_PROGRAMS += test-stdlib

@@ -1,0 +1,25 @@
+Description:
+Base layer for elementary Unicode string functions.
+
+Files:
+lib/unistr.h
+
+Depends-on:
+unitypes
+unused-parameter
+stdbool
+inline
+
+configure.ac:
+
+Makefile.am:
+
+Include:
+"unistr.h"
+
+License:
+LGPL
+
+Maintainer:
+Bruno Haible
+

@@ -1,0 +1,149 @@
+I first went onto the webpage for Assignment 5 and looked at the properties of
+the old version of coreutils by right clicking, selecting "Properties", and
+copying the Address(URL) down. I then ran the wget command with "wget http://
+www.cs.ucla.edu/classes/winter15/cs35L/assign/coreutils-with-bug.tar.gz" to 
+obtain the old stable version of coreutils. I then unzipped the file using the
+command "tar xzvf coreutils-with-bug.tar.gz". This created a directory 
+"coreutils-with-bug" and I changed my directory via "cd coreutils-with-bug". 
+While inside this directory, I ran "./configure" to build the file and then 
+"make" to recompile any files necessary. I noticed several errors when I ran
+"make" such as "utimens.h:2: error; conflicting types for 'futimens" along with
+two "Error 1" and two "Error 2" messages. In particular, the full error message
+for the main error was as follows:
+
+utimens.h:2: error: conflicting types for 'futimens'
+/usr/include/sys/stat.h:374: note: previous declaration of 'futimens' was here
+
+While in the "coreutils-with-bug" directory, I obtained the patch using the 
+command "wget http://www.cs.ucla.edu/classes/winter15/cs35L/assign/coreutils.
+diff" and then I ran "patch -p0 < coreutils.diff". The reason for using "p0" 
+instead of "p1" like in Lab 3 is because "p0" is used to give the entire file 
+name unmodified while "p1" ignores the leading slash. The patch was successful;
+a total of five files were patched and the command line output was as follows:
+
+patching file lib/utimens.c
+patching file lib/utimens.h
+patching file src/copy.c
+patching file src/tee.c
+patching file src/touch.c
+
+The problems with building the original coreutils as-is was that "futimens" was
+defined more than once, meaning that the original version of coreutils was 
+trying to redefine a previous version of "futimens". Looking at the patch 
+details, I realized MANY variables were defined more than once; the patch 
+renamed these variables by adding a "coreutils_" prefix.
+
+Once I applied the patch, I rebuilt the coreutils with the patch by calling 
+"./configure" then "make" once gain. As a sanity check, I ran "make check" 
+this time and saw that a plethora of cases passed except the last one, but 
+that was insignificant. I switched to the src directory using "cd src" and 
+called "ls" and saw that there was an executable version of src. I then 
+reproduced the problem by following the steps on webpage with these commands: 
+
+tmp=$(mktemp -d)
+cd $tmp
+touch -d '1918-11-11 11:00 GMT' wwi-armistice
+touch now
+sleep 1
+touch now1
+TZ=UTC0 ~/CS_35L/HW_5/coreutils-with-bug/src/ls -lt --full-time wwi-armistice 
+now now1
+
+For the last step, I had to specify the entire path name because the temporary
+directory did not have an ls file. Additionally, I had to use these commands 
+instead of the commands that Sharath mentioned in his Powerpoint slides because
+SEASNET 64-bit machine versus the 32-bit machine that is used on NFS.
+
+To use the debugger, I first switched my directory to the src directory and 
+then I ran "emacs ls.c". While in Emacs, I created two windows using "CTRL-x 3"
+and then I switched windows with "CTRL-x o". Then, I ran M-x and typed "gdb" 
+and pressed ENTER. The default command to enter was "gdb --annotate=3 chroot";
+ I just appended a "./ls" at the end of the command to get "gdb --annotate=3 
+./ls" and I pressed ENTER. I then set numerous breakpoints at the start of int
+main(), the lines containing "compare m_time", and the function "sort_files" 
+containing "qsort".
+
+While debugging, I found "CTRL-x CTRL-A CTRL-b" to be a helpful little 
+shortcut that let me set breakpoints while in the source code instead of 
+having to check the line I am at. Since the problem had to do with how the 
+dates were displayed, I searched "sort_time" with C-s "sort_time". Tracing the
+execution, I first put breakpoints in the int main() as well as the function
+"sort_files". As I ran through the code line by line using "n", I noticed at 
+the very end of the function that "qsort" was the method of sorting the inputs,
+but compare_mtime was being used as the actual sorting function. I determined 
+compare_mtime to be the sorting function as I debugged the code on Line 2975 
+and saw that sort_reverse evaluated to false using "p sort_reverse", and this 
+caused "func" to receive the value of "compare_mtime". I received a message 
+on gdb that said "Single stepping until exit from function msort_with_tmp", 
+and at this point, I started stepping in using "s".  As I traced through 
+the compare_mtime function, I noticed that this would call cmp_mtime, which 
+further called timespec_cmp. By stepping a total of 6 times using "s", I was 
+able to figure out that timespec_cmp is where the execution ends without 
+calling another function, so this signified that the problem was in the file 
+called timespec.h. I exited Emacs and entered the "lib" directory and ran 
+Emacs on the "timespec.h" file. I noticed the algorithm they used involved a 
+subtraction expression "a.tv_nsec - b.tv_nsec". I went back into the source 
+code, and I realized that there could be potential problems regarding overflow
+when I saw that the "wwi-armistice" file had a very large negative value when 
+I checked the first argument "files", which was an array that contained 
+"wwi-armistice" as the first argument. From here, I knew the steps that I 
+needed to take and proceeded to try to fix the bug.
+
+As a sanity check, I first redownloaded the original coreutils-with-bug 
+directory using the process outlined earlier. Then I ran the "./configure" and
+"make" commands while in the coreutils-with-bug-directory. Once I was 
+satisfied with that result, I moved back to the HW_5 directory, and copied the
+current version of coreutils-with-bug into a temporary directory called "store"
+using "cp -a coreutils-with-bug store". After the copy was successfully made, I
+changed back into coreutils-with-bug and changed into the "lib" directory".
+
+From there, I ran "emacs timespec.h" and changed the code to take into account
+overflow when dealing with large numerical values. I changed back into the 
+coreutils-with-bug directory with "cd .." and then I repeated the "./configure"
+, "make", and "make check" commands to rebuild the newly modified files. I then
+repeated the sequence of commands that reproduced the result outlined above,
+and I noticed that the output was now successful after the patch was created.
+
+Returning to my HW_5 directory, I ran "diff -u ~/CS_35L/HW_5/store/lib/
+timespec.h ~/CS_35L/HW_5/coreutils-with-bug/lib/timespec.h" to first check if 
+there would be a successful patch version. After checking with Emacs, I was 
+satisfied and sent the patch version into a .diff file using "diff -u ~/CS_35L/
+HW_5/store/lib/timespec.h ~/CS_35L/HW_5/coreutils-with-bug/lib/timespec.h > 
+lab5.diff". 
+
+To do the concatenation, I used the command "cat ~/CS_35L/HW_5/coreutils-with-
+bug/lib/ChangeLog > log.txt" to concatenate the text into a log file. For 
+easier access, I copied these two files into the Desktop by using "cp log.txt 
+~/Desktop" and "cp lab5.diff ~/Desktop/lab5.diff" and went on Remote Desktop to
+verify the correctness by checking the compilation using gcc. After logging 
+into the "LnxSrv" terminals with two tabs, I changed into Desktop because 
+that's where my files were stored with "cd Desktop" and then I used Emacs to 
+open both "log.txt" and "lab5.diff". The pair used the Emacs GUI to open and 
+I copied the entire "log.txt" and appended it to the beginning of lab5.diff 
+by first pressing ENTER once at the top and then pasting by right-clicking 
+and then using the PASTE option. Returning to my main Desktop and using 
+Putty, I checked the new version of lab5.diff and it correctly showed the 
+patch messages that I committed along with those of Eggert and Meyering with 
+my modified source code all the way at the bottom. This file "lab5.diff" is 
+accessible in the Desktop directory of my SEAS account.
+
+I tried to reproduce the problem in my home directory on the SEASnet Linux 
+servers by first using "cd" to return to my home directory. I then created the
+three files with the following commands: "touch -d '1918-11-11 11:00 GMT' 
+wwi-armistice", "touch now", "sleep 1", "touch now1", and "TZ=UTC0 ls -lt 
+--full-time wwi-armistice now now1" in that order. My output was as follows:
+
+-rw-r--r-- 1 linm csugrad 0 2054-12-17 17:28:16.000000000 +0000 wwi-armistice
+-rw-r--r-- 1 linm csugrad 0 2015-02-07 21:44:40.810004000 +0000 now1
+-rw-r--r-- 1 linm csugrad 0 2015-02-07 21:44:34.747871000 +0000 now
+
+The reason for this output is that SEASNET uses an unsigned int 32-bit number 
+for time stamps and this means I cannot have negative values for time stamps. 
+The essential start date of time is the number of seconds from January 1, 
+1970, so any date previous to that i.e. "1918-11-11" would be considered as 
+"negative time", but since we are using unsigned int values, the SEASnet Linux
+server interprets this date to be positive, so this is why I see the value as
+"2054-12-17". The second bug in this version of coreutils is that the 
+wwi-armistice is not displayed in chronological order since the most recent
+files (in this case, the 2054-12-17 wwi-armistice file) should be at the bottom
+but in this case it is at the top.

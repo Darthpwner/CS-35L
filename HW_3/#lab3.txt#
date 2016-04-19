@@ -1,0 +1,77 @@
+I first obtained the coreutils file using the command "wget ftp://ftp.gnu.org/
+gnu/coreutils/coreutils-7.6.tar.gz". I then used the command "tar xvf coreutils
+-7.6.tar.gz" to unzip the file. This subsequently created a "coreutils-7.6" 
+directory and a "coreutils-7.6.tar.gz" file.
+
+After changing into the directory using "cd coreutils-7.6", I first made a new
+ directory using "mkdir build". To create the makefile that installs coreutils
+ to build, I used the command "./configure --prefix="$PWD/build". Afterwards, 
+I performed the actual compilation with the "make" command, and I installed it
+ using "make install". Both "make" and "make install" performed a lot of 
+operations that involved entering and leaving directories, but "make install"
+obviously installed a lot of things inside these directories, hence the reason
+why it was named like that. I was a bit confused on why we had to use the path
+we did for the configure command because I assumed that you would have to use
+the current path we were in, which in my case was "/u/cs/ugrad/linm/CS_35L/
+HW_3/coreutils-7.6" which I found using the "pwd" command. I asked the TA 
+Tai-Lin Chu and he clarified this part and told me the appropriate command that
+I mentioned above.
+
+To actually see how the bug affects my window console on the terminal, I 
+changed directories by using the "cd build/bin" command and made sure that my 
+locale was in the usual default setting "US.UTF-8" by manually exporting using
+ "export LC_ALL='en_US.UTF-8". After verifying the locale using "locale", I 
+ran the command "./ls -l" to build the executable list of all the files and 
+noticed the bug, where all dates would be listed in the format "YYYY-MM-DD" 
+versus the usual "<Month> <Day> <Year" format. I returned to my directory 
+containing the "coreutils-7.6" directory (which in my case was ~/CS_35L/HW_3) 
+by repeatedly using the command "cd .." for a total of 3 times until I 
+returned to my correct directory. 
+
+I created a new file in emacs called "patch" using "emacs patch" and 
+then I copied and pasted the text from Pádraig Brady's email starting from 
+"NEWS" and going all the way to the end of the comment: " /* Note we leave %5b
+ etc. alone so user widths/flags are honored.  */". To see the effects of the 
+patch without actually patching the file, I first changed directories back 
+into coreutils-7.6 by using "cd coreutils-7.6" and then I used the command 
+"patch -p1 --dry-run < ../patch" to get a simulation of how the program would 
+run if I were to include the patch. It gave me an error message "**** 
+malformed patch at line 10: outline -*-". I went back into emacs using 
+"emacs ../email.txt" and went to line 10 to debug. There was a problem with 
+how line 10 starting with "outline" was formatted, so the TA Tai-Lin Chu 
+explained that I had to press Backspace once in order to preserve the original
+ indentation. Afterwards, I tried running the same command I did earlier "patch
+ -p1 --dry-run <  ../patch". It successfully ran this time, displaying the 
+message:
+
+patching file NEWS
+"Hunk #1 succeeded at 397 with fuzz 2 (offset 365 lines).
+patching file src/ls.c
+Hunk #1 succeeded at 2013 (offset -1 lines).
+Hunk #2 succeeded at 2028 (offset -1 lines)."
+
+This was a very good sign, so I ran it normally without dry-run, so the command
+looked like "patch -p1 < ../patch". which output the same message as above. 
+
+Following step 5 on the webpage, I typed "make" when I was in the directory of
+"/u/cs/ugrad/linm/CS_35L/HW_3/coreutils-7.6/build/bin" and I noticed that 
+"make" was an all-recursive that generated man documents often for 
+"configmake.h" when we entered a directory. While my "make" command did not 
+result in these commands, I did read up that "CC ls.o" is used to compile ls.o,
+"CCLD dir", "CCLD vdir", and "CCLD ls" are used to link dir vdir ls, and "GEN
+dir.1", "GEN vdir.1", and "GEN ls.1" are used to generate man documents. 
+
+In order to test that my changes fixed the bug, I made sure I was in the 
+directory from step 5 ("/u/cs/ugrad/linm/CS_35L/HW_3/coreutils-7.6/build/bin"
+and I ran the "ls -l" command like I did in Step 3. The most important thing I
+noticed now was that the files were sorted in the format of <Month> <Day>, 
+which is the traditional Unix methodology of displaying dates. I tested the 
+file by using the "touch" command to artificially mark two files "whoami" and 
+"yes". I wanted to have fun with this so I used "touch -t 199503260030 yes" to
+change the date of modification to March 26, 1995 (my birthday) and it 
+correctly displayed after I used "ls -l" in the directory with "build/bin". To
+test a more recently modified file, I just used "touch whoami", which displayed
+a time of Jan 22 02:28, which is the time I called touch on "whoami". For good
+measure, I modified the file called "who" using the command "touch -t 
+201401220030" and then ran "ls -l" once more to see that "who" was updated on 
+Jan 22 2014.

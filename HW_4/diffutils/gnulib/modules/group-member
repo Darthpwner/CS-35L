@@ -1,0 +1,27 @@
+Description:
+Determine whether the current process has the permissions of a given group ID.
+
+Files:
+lib/group-member.h
+lib/group-member.c
+m4/group-member.m4
+
+Depends-on:
+extensions
+getgroups
+xalloc
+stdbool
+
+configure.ac:
+gl_FUNC_GROUP_MEMBER
+
+Makefile.am:
+
+Include:
+"group-member.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

@@ -1,0 +1,21 @@
+Description:
+memmem() function: efficiently locate first substring in a buffer.
+
+Files:
+
+Depends-on:
+memmem-simple
+
+configure.ac:
+gl_FUNC_MEMMEM
+
+Makefile.am:
+
+Include:
+<string.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+libc, Eric Blake

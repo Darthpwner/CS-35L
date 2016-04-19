@@ -1,0 +1,93 @@
+I first obtained the coreutils file using the command "wget ftp://ftp.gnu.org/
+gnu/coreutils/coreutils-7.6.tar.gz". I then used the command "tar xvf coreutils
+-7.6.tar.gz" to unzip the file. This subsequently created a "coreutils-7.6" 
+directory and a "coreutils-7.6.tar.gz" file.
+
+After changing into the directory using "cd coreutils-7.6", I used the command
+"./configure", which checks for many different conditions and sets up the make
+files. Then, I used the command "make" to actually create the various make
+files. This command does the actual compilation by creating the make files 
+that will install the coreutils to build the file. I was a bit confused on this
+section because I heard from a TA that we had to create a junk directory, but 
+I later learned this would yield incorrect behavior because it does not 
+actually modify the "src ls.c" file. I originally thought we had to use 
+".configure --prefix="$PWD/build" and "make install" but this ended up with
+incorrect behavior after I tested the file more extensively because it only 
+worked in my current directory. Another issue was that I assuemd that we had 
+to configure the path differently using the path we were in. Using "pwd", I 
+thought we were supposed to compile the current path: "/u/cs/ugrad/linm/CS_35L
+/HW_3/coreutils-7.6", but I clarified it further with friends and realized 
+this was an incorrect command to use. 
+
+To actually see how the bug affects my window console on the terminal, I 
+changed directories by using the "cd src" command and ran the command "./ls -l
+ /bin/bash" to build the executable list of all the files and noticed the bug,
+ where all dates would be listed in the format "YYYY-MM-DD" versus the usual 
+"<Month> <Day> <Year" format. 
+
+To apply the patch, I used Emacs to apply Brady's patch with the command "emacs
+ls.c". I clicked on the link on the CS 35L HW 3 webpage that said "a temporary
+workaround path published by Pádraig Brady". In that webpage, I found the patch
+location, which started at the line "--- a/src/ls.c" and ended on the ending 
+curly brace "}" which was right before the comment "/* Note we leave...". The 
+entire code segment was as follows:
+
+--- a/src/ls.c
++++ b/src/ls.c
+@@ -2014,7 +2014,6 @@ decode_switches (int argc, char **argv)
+             break;
+ 
+           case long_iso_time_style:
+-          case_long_iso_time_style:
+             long_time_format[0] = long_time_format[1] = "%Y-%m-%d %H:%M";
+             break;
+ 
+@@ -2030,13 +2029,8 @@ decode_switches (int argc, char **argv)
+                    formats.  If not, fall back on long-iso format.  */
+                 int i;
+                 for (i = 0; i < 2; i++)
+-                  {
+-                    char const *locale_format =
+-                      dcgettext (NULL, long_time_format[i], LC_TIME);
+-                    if (locale_format == long_time_format[i])
+-                      goto case_long_iso_time_style;
+-                    long_time_format[i] = locale_format;
+-                  }
++                  long_time_format[i] =
++                    dcgettext (NULL, long_time_format[i], LC_TIME);
+               }
+           }
+
+"---" means that the lines were deleted and "+++" means the lines were added,
+so I deleted all lines with "---" and added all line with "+++". In emacs, I 
+used a shortcut "C-u 2014 C-v" to jump to line 2014, which I found to be an 
+effective placemarker to find the lines to be deleted. I deleted lines 2016 and
+the range of lines 2031 to 2037 and added the following lines right after the 
+"for" literal keyword:
+                  long_time_format[i] =
+                    dcgettext (NULL, long_time_format[i], LC_TIME);
+
+I exited emacs using "C-x C-c" and then I ran "make" again to compile my code
+and build the fixed version. Four commands got executed; these commands were:
+    
+    CC	  ls.o
+    CCLD  dir
+    CCLD  vdir
+    CCLD  ls
+
+The command "CC	ls.o" will compile ls.o, while "CCLD dir", "CCLD vdir", and 
+"CCLD ls" are responsible for linking dir, vdir, and ls, respectively.
+
+To make sure I fixed the bug, I tested both the modified "ls" and the 
+installed "ls" by using the commands "./ls -l /bin/bash" and "ls -l /bin/bash",
+respectively, and comparing the results. In this case, both commands yielded
+an identical result with the date being output successfully in the form <Month>
+<Day> <Hour>:<Seconds>. To further test this, I tested the file by using the 
+"touch" command to artificially mark two files "whoami" and "yes". I wanted to
+ have fun with this so I used "touch -t 199503260030 yes" to change the date 
+of modification to March 26, 1995 (my birthday) and it correctly displayed 
+after I used "ls -l" in the directory with "build/bin". To test a more 
+recently modified file, I just used "touch whoami", which displayed a time of 
+Jan 22 21:46, which is the time I called touch on "whoami". For good measure, 
+I modified the file called "who" using the command "touch -t 201401220030" 
+and then ran "ls -l" once more to see that "who" was updated on Jan 22 2014.

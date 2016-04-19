@@ -1,0 +1,33 @@
+Description:
+Convert internet address from presentation to internal, binary, format.
+
+Files:
+lib/inet_pton.c
+m4/inet_pton.m4
+
+Depends-on:
+c-ctype
+socklen
+sys_socket
+arpa_inet
+errno
+netinet_in
+extensions
+
+configure.ac:
+gl_FUNC_INET_PTON
+gl_ARPA_INET_MODULE_INDICATOR([inet_pton])
+
+Makefile.am:
+
+License:
+LGPLv2+
+
+Include:
+<arpa/inet.h>
+
+Link:
+$(INET_PTON_LIB)
+
+Maintainer:
+Simon Josefsson, glibc

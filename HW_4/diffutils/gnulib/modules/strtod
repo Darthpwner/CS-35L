@@ -1,0 +1,30 @@
+Description:
+strtod() function: convert string to 'double'.
+
+Files:
+lib/strtod.c
+m4/strtod.m4
+
+Depends-on:
+c-ctype
+stdbool
+stdlib
+
+configure.ac:
+gl_FUNC_STRTOD
+gl_STDLIB_MODULE_INDICATOR([strtod])
+
+Makefile.am:
+LIBS += $(POW_LIB)
+
+Include:
+<stdlib.h>
+
+Link:
+$(POW_LIB)
+
+License:
+LGPL
+
+Maintainer:
+all

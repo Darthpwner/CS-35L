@@ -1,0 +1,26 @@
+Description:
+Determine category of a Unicode character.
+
+Files:
+lib/unictype/categ_of.c
+lib/unictype/categ_of.h
+
+Depends-on:
+unictype/base
+unictype/category-none
+
+configure.ac:
+AC_REQUIRE([AC_C_INLINE])
+
+Makefile.am:
+lib_SOURCES += unictype/categ_of.c
+
+Include:
+"unictype.h"
+
+License:
+LGPL
+
+Maintainer:
+Bruno Haible
+

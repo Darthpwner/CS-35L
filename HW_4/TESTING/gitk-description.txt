@@ -1,0 +1,23 @@
+The top left hand corner has a subwindow with all the patches listed in 
+chronological order. As I scrolled down, I noticed that there were changes that
+have been merged and descriptions of the changes that were made.
+
+The subwindow in the middle of the top of the page shows the people who 
+committed the changes and their emails. 
+
+All the way to the top right is the date in the format 
+YEAR-MONTH-DAY HOUR:MINUTE:SECOND that the commit was made.
+
+Shal ID showed the hash that was associated with the selected match.
+
+The row shows the change number of the current branch and lower numbers reveal
+more recent changes.
+
+Search lets me look for a specific word or string of words and gives almost
+immediate access in the ChangeLog.
+
+The window underneath shows a diff version that compares the old and new 
+versions of the file and I could switch between the pair using "C x o".
+
+The screen on the right gives information about the Patch or the Tree and 
+informative comments about the file paths.

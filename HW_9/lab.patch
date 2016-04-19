@@ -1,0 +1,11 @@
+--- sthttpd-2.27.0/src/thttpd.c	2014-10-02 15:02:36.000000000 -0700
++++ sthttpd-2.27.0-delta/src/thttpd.c	   2015-03-02 08:03:12.295880387 -0800
+@@ -1604,7 +1604,7 @@ handle_read( connecttab* c, struct timev
+     /* Read some more bytes. */
+     sz = read(
+     hc->conn_fd, &(hc->read_buf[hc->read_idx]),
+-    hc->read_size - hc->read_idx );
++    hc->read_size );
+     if ( sz == 0 )
+     {
+     httpd_send_err( hc, 400, httpd_err400title, "", httpd_err400form, "" );

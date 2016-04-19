@@ -1,0 +1,27 @@
+Description:
+Read entire utmp file into memory.
+
+Files:
+lib/readutmp.h
+lib/readutmp.c
+m4/readutmp.m4
+
+Depends-on:
+extensions
+xalloc
+stdbool
+stdint
+
+configure.ac:
+gl_READUTMP
+
+Makefile.am:
+
+Include:
+"readutmp.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering & Paul Eggert

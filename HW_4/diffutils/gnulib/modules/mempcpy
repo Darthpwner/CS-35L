@@ -1,0 +1,25 @@
+Description:
+mempcpy() function: copy memory area, return point after last written byte.
+
+Files:
+lib/mempcpy.c
+m4/mempcpy.m4
+
+Depends-on:
+extensions
+string
+
+configure.ac:
+gl_FUNC_MEMPCPY
+gl_STRING_MODULE_INDICATOR([mempcpy])
+
+Makefile.am:
+
+Include:
+<string.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+Simon Josefsson

@@ -1,0 +1,24 @@
+Description:
+mkdir() function: create a directory.
+
+Files:
+lib/mkdir.c
+m4/mkdir.m4
+
+Depends-on:
+dirname-lgpl
+sys_stat
+
+configure.ac:
+gl_FUNC_MKDIR
+
+Makefile.am:
+
+Include:
+<sys/stat.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+Jim Meyering

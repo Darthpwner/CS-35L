@@ -1,0 +1,24 @@
+Description:
+times() function: get process times
+
+Files:
+lib/times.c
+m4/times.m4
+
+Depends-on:
+sys_times
+
+configure.ac:
+gl_FUNC_TIMES
+gl_SYS_TIMES_MODULE_INDICATOR([times])
+
+Makefile.am:
+
+Include:
+<sys/times.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+Simon Josefsson

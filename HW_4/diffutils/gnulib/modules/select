@@ -1,0 +1,29 @@
+Description:
+select() function: synchronous I/O multiplexing.
+
+Files:
+lib/select.c
+m4/select.m4
+
+Depends-on:
+alloca
+sockets
+sys_select
+
+configure.ac:
+gl_FUNC_SELECT
+gl_SYS_SELECT_MODULE_INDICATOR([select])
+
+Makefile.am:
+
+Include:
+<sys/select.h>
+
+Link:
+$(LIBSOCKET)
+
+License:
+LGPLv2+
+
+Maintainer:
+Simon Josefsson

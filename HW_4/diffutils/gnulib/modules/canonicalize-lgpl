@@ -1,0 +1,36 @@
+Description:
+realpath, canonical_file_name: Provide canonical absolute file name
+
+Files:
+lib/canonicalize-lgpl.c
+m4/canonicalize.m4
+m4/double-slash-root.m4
+
+Depends-on:
+alloca-opt
+errno
+extensions
+lstat
+malloca
+memmove
+pathmax
+readlink
+stdlib
+sys_stat
+
+configure.ac:
+gl_CANONICALIZE_LGPL
+gl_MODULE_INDICATOR([canonicalize-lgpl])
+gl_STDLIB_MODULE_INDICATOR([canonicalize_file_name])
+gl_STDLIB_MODULE_INDICATOR([realpath])
+
+Makefile.am:
+
+Include:
+<stdlib.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+Bruno Haible

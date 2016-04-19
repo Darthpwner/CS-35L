@@ -1,0 +1,27 @@
+Description:
+Formatted output to a string.
+
+Files:
+lib/unistdio/ulc-vsprintf.c
+lib/unistdio/u-vsprintf.h
+
+Depends-on:
+unistdio/base
+unistdio/ulc-vasnprintf
+stdint
+errno
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += unistdio/ulc-vsprintf.c
+
+Include:
+"unistdio.h"
+
+License:
+LGPL
+
+Maintainer:
+Bruno Haible
+

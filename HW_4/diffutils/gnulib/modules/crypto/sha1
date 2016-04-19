@@ -1,0 +1,24 @@
+Description:
+Compute SHA1 checksum.
+
+Files:
+lib/sha1.h
+lib/sha1.c
+m4/sha1.m4
+
+Depends-on:
+stdint
+
+configure.ac:
+gl_SHA1
+
+Makefile.am:
+
+Include:
+"sha1.h"
+
+License:
+LGPLv2+
+
+Maintainer:
+Jim Meyering

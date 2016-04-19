@@ -1,0 +1,25 @@
+Description:
+strdup() function: duplicate a string.
+
+Files:
+lib/strdup.c
+m4/strdup.m4
+
+Depends-on:
+string
+malloc-posix
+
+configure.ac:
+gl_FUNC_STRDUP_POSIX
+gl_STRING_MODULE_INDICATOR([strdup])
+
+Makefile.am:
+
+Include:
+<string.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+all, glibc

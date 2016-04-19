@@ -1,0 +1,25 @@
+Description:
+Store a character in UTF-8 string.
+
+Files:
+lib/unistr/u8-uctomb.c
+lib/unistr/u8-uctomb-aux.c
+
+Depends-on:
+unistr/base
+
+configure.ac:
+gl_MODULE_INDICATOR([unistr/u8-uctomb])
+
+Makefile.am:
+lib_SOURCES += unistr/u8-uctomb.c unistr/u8-uctomb-aux.c
+
+Include:
+"unistr.h"
+
+License:
+LGPL
+
+Maintainer:
+Bruno Haible
+

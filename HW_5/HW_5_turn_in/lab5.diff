@@ -1,0 +1,25 @@
+2015-02-06  Matthew Allen Lin  <linm@lnxsrv01.seas.ucla.edu>
+
+	* timespec.h: Changed return conditions for timespec_cmp in order to 
+	account for overflow when performing operations on large numbers.
+	
+--- /u/cs/ugrad/linm/CS_35L/HW_5/store/lib/timespec.h	2005-09-21 23:05:39.000000000 -0700
++++ /u/cs/ugrad/linm/CS_35L/HW_5/coreutils-with-bug/lib/timespec.h	2015-02-06 08:24:12.128199000 -0800
+@@ -45,8 +45,15 @@
+ static inline int
+ timespec_cmp (struct timespec a, struct timespec b)
+ {
+-  int diff = a.tv_sec - b.tv_sec;
+-  return diff ? diff : a.tv_nsec - b.tv_nsec;
++  if (a.tv_sec == b.tv_sec)
++    return a.tv_sec - b.tv_sec;
++  else
++  {
++    if (a.tv_sec < b.tv_sec)
++      return -1;
++    else
++      return 1;
++  }
+ }
+ 
+ # if ! HAVE_DECL_NANOSLEEP

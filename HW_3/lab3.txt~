@@ -1,0 +1,43 @@
+I first obtained the coreutils file using the command "wget ftp://ftp.gnu.org/
+gnu/coreutils/coreutils-7.6.tar.gz". I then used the command "tar xvf coreutils
+-7.6.tar.gz" to unzip the file.
+
+After changing into the directory using "cd coreutils-7.6", I first made a new
+ directory using "mkdir build". To create the makefile that installs coreutils
+ to build, I used the command "./configure --prefix="$PWD/build". Afterwards, 
+I performed the actual compilation with the "make" command, and I installed it
+ using "make install". Both "make" and "make install" performed a lot of 
+operations on the files. 
+
+To actually see how the bug affects my window console on the terminal, I 
+changed directories by using the "cd build/bin" command and made sure that my 
+locale was in the usual default setting "US.UTF-8" by manually exporting using
+ "export LC_ALL='en_US.UTF-8". After verifying the locale using "locale", I 
+ran the command "./ls -l" to build the executable list of all the files and 
+noticed the bug, where all dates would be listed in the format "YYYY-MM-DD" 
+versus the usual "<Month> <Day> <Year" format. I returned to my directory 
+containing the "coreutils-7.6" directory (which in my case was ~/CS_35L/HW_3) 
+by repeatedly using the command "cd .." until I returned to my correct 
+directory. 
+
+I created a new file in emacs called "email.txt" using "emacs email.txt" and 
+then I copied and pasted the text from Pádraig Brady's email starting from 
+"NEWS" and going all the way to the end of the comment: " /* Note we leave %5b
+ etc. alone so user widths/flags are honored.  */". To see the effects of the 
+patch without actually patching the file, I first changed directories back 
+into coreutils-7.6 by using "cd coreutils-7.6" and then I used the command 
+"patch -p1 --dry-run < ../email.txt". It gave me an error message "**** 
+malformed patch at line 10: outline -*-". I went back into emacs using 
+"emacs ../email.txt" and went to line 10 to debug. There was a problem with 
+how line 10 starting with "outline" was formatted, so the TA Tai-Lin Chu 
+explained that I had to press Backspace once in order to preserve the original
+ indentation. Afterwards, I tried running the same command I did earlier "patch
+ -p1 < ../email.txt". It successfully ran this time, displaying the 
+message:
+
+patching file NEWS
+"Hunk #1 succeeded at 397 with fuzz 2 (offset 365 lines).
+patching file src/ls.c
+Hunk #1 succeeded at 2013 (offset -1 lines).
+Hunk #2 succeeded at 2028 (offset -1 lines)."
+

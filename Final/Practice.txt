@@ -1,0 +1,43 @@
+for i in "abc bcd cdf"; then
+    echo "$i"
+endfor
+
+a. there are syntax errors
+b. it will print abc bcd cdf in one line
+c. it will print abc cdf in 3 lines
+d. then and endfor are the only syntax errors
+
+Answer: ad
+
+There needs to be an "if" corresponding to "then", and "endfor" is not a valid
+keyword.
+
+Fixed code:
+for i in "abc bcd cdf"; do
+    echo "$i"
+done
+
+b - this will treat the whole thing as one string and i will be set to the 
+whole string and be pritned only once.
+
+Fixed code:
+for i in abc bcd cdf; do
+    echo "$i"
+done
+
+c- it will print abc bcd cdf in 3 lines because it sees it as 3 variables. It
+treats it as 3 elements. It means we print these 3 elements in one line
+
+Q. Explain the difference between .s .o and .c files?
+A.
+
+-rw-r--r-- 1 tailin csgrad 2034 Mar 11 12:01 final.md
+-rw-r--r-- 1 tailin csgrad 267  Mar 11 16:20 final2.md
+
+a. the 1 means the number of hard links
+b. the filesize of final.md is 2034 bte
+c. only tailin can read the two files
+d. only tailin can write the two files
+
+abd - c is incorrect because anyone has permissions to read the file
+

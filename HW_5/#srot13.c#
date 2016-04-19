@@ -1,0 +1,136 @@
+
+/*Sort encoded data w/o decoding & encoding it */
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+int rot13cmp(char const* a, char const* b)
+{
+  int i = 0;
+
+  while(1)
+    {
+      //Compare one char at a time
+
+      //End of file comparisons
+      if (a[i] == '\n')
+	{
+	  if (b[i] == '\n')
+	    return 0;
+	  return -1;
+	}
+
+      if (b[i] == '\n')
+	return 1;
+
+      //Check character by character once we have a difference
+      if (a[i] != b[i])
+	{
+	  //For alphabetic cs that have the same case, logic is reversed since
+	  // we switch sides and if sides are the same, normal evaluation
+	  //results.
+	  if (isalpha(a[i]) && isalpha(b[i]))
+	    {
+	      //Check to see if they have different cases first
+	      if(isupper(a[i]) && islower(b[i]))
+		return -1;
+	      else if(islower(a[i]) && isupper(b[i]))
+		return 1;
+
+	      //Otherwise, they are the same case and logic will be reversed
+	      else
+		{
+		  //Normal evaluation
+		  if ((toupper(a[i]) >= 'A' && toupper(a[i]) <= 'M') && (toupper(b[i]) >= 'A' && toupper(b[i]) <= 'M'))
+		    {
+		      if (a[i] < b[i])
+			return -1;
+		      else
+			return 1;
+		    }
+
+		  else if ((toupper(a[i]) >= 'N' && toupper(a[i]) <= 'Z') && (toupper(b[i]) >= 'N' && toupper(b[i]) <= 'Z'))
+		    {
+		      if (a[i] < b[i])
+			return -1;
+		      else
+			return 1;
+		    }
+
+		  //Otherwise, we flip the logic since a and b are not in the same domain
+		  if(a[i] < b[i])
+		    return 1;
+		  else
+		    return -1;
+		}
+	    }
+
+	  //Otherwise, evaluate normally because we have one or more non-alphabetic characters
+	  if (a[i] < b[i])
+	    return -1;
+	  else
+	    return 1;
+	}
+
+      i++;
+    }
+}
+
+int cmp(const void *a, const void *b)
+{
+  return rot13cmp(*(const char**) a, *(const char**) b);
+}
+
+int main(){
+  char c;
+  char* buffer = &c;  //Where all the character are stored
+  int bufferSize = sizeof(char)*100;
+  buffer = (char*)malloc(bufferSize);
+  if(buffer == NULL){
+    fprintf(stderr, "Error allocating buffer bytes");
+    exit(1);
+  }
+  int n = 0;
+  c = getchar();
+  while(c != EOF){ //Adds all characters to buffer
+    buffer[n] = c;
+    c = getchar();
+    n++;
+    if(bufferSize <= n){
+      bufferSize += sizeof(char)*100; //Double size of buffer if not enough
+      buffer = (char*)realloc(buffer, bufferSize);
+      if(buffer == NULL){
+	fprintf(stderr, "Error reallocating buffer bytes");
+	exit(1);
+      }
+    }
+  }
+  if (n==0){//If the file is empty
+    return 0;
+
+  }
+  if(buffer[n-1] != '\n') //Adds new line if missing at end
+    buffer[n] = '\n';
+  
+  char** words; //pointers to where each word starts
+  int wordsSize = sizeof(char*)*100;
+  words = (char**)malloc(wordsSize);
+  if(words == NULL){
+    fprintf(stderr, "Error allocating **words bytes");
+    exit(1);
+  }
+  words[0] = &buffer[0]; //First word starts at beginning
+  int i = 1, j = 1;
+  while(j < n){
+    if (buffer[j]==EOF)
+      break;
+    if(buffer[j-1] == '\n' && buffer[j] != '\n'){ //Checks for newline characters
+      words[i] = &buffer[j];
+      i++;
+      if(wordsSize <= i){ //resize
+	wordsSize += sizeof(char*)*100;
+	words = (char**)realloc(words, wordsSize);
+	if(words==NULL){
+	  fprintf(stderr, "Error reallocating for **words bytes");
+	  exit(1);
+	}

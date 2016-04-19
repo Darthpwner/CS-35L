@@ -1,0 +1,35 @@
+Description:
+mbrtowc() function: convert multibyte character to wide character.
+
+Files:
+lib/mbrtowc.c
+m4/mbrtowc.m4
+m4/mbstate_t.m4
+m4/locale-fr.m4
+m4/locale-ja.m4
+m4/locale-zh.m4
+m4/codeset.m4
+
+Depends-on:
+wchar
+mbsinit
+localcharset
+streq
+verify
+extensions
+
+configure.ac:
+gl_FUNC_MBRTOWC
+gl_WCHAR_MODULE_INDICATOR([mbrtowc])
+
+Makefile.am:
+
+Include:
+<wchar.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+Bruno Haible
+

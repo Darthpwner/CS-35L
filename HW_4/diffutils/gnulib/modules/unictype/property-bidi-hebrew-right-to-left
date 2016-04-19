@@ -1,0 +1,27 @@
+Description:
+Test whether a Unicode character is "bidi hebrew right to left".
+
+Files:
+lib/unictype/pr_bidi_hebrew_right_to_left.c
+lib/unictype/pr_bidi_hebrew_right_to_left.h
+lib/unictype/bitmap.h
+
+Depends-on:
+unictype/base
+unictype/bidicategory-of
+
+configure.ac:
+AC_REQUIRE([AC_C_INLINE])
+
+Makefile.am:
+lib_SOURCES += unictype/pr_bidi_hebrew_right_to_left.c
+
+Include:
+"unictype.h"
+
+License:
+LGPL
+
+Maintainer:
+Bruno Haible
+

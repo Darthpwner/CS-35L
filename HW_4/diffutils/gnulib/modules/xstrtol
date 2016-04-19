@@ -1,0 +1,31 @@
+Description:
+Convert string to 'long' or 'unsigned long', with error checking.
+
+Files:
+lib/xstrtol.h
+lib/xstrtol.c
+lib/xstrtoul.c
+lib/xstrtol-error.c
+m4/xstrtol.m4
+
+Depends-on:
+exitfail
+error
+getopt-gnu
+gettext-h
+intprops
+inttypes
+
+configure.ac:
+gl_XSTRTOL
+
+Makefile.am:
+
+Include:
+"xstrtol.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

@@ -1,0 +1,21 @@
+@node setlocale
+@section @code{setlocale}
+@findex setlocale
+
+POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/setlocale.html}
+
+Gnulib module: ---
+
+Portability problems fixed by Gnulib:
+@itemize
+@end itemize
+
+Portability problems not fixed by Gnulib:
+@itemize
+@item
+On Cygwin 1.5.x, which doesn't have locales,
+@code{setlocale(LC_ALL,NULL)} always returns @code{"C"}.
+
+@item
+On Cygwin 1.7.0, only the charset portion of a locale designation is honored.
+@end itemize

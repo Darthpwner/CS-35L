@@ -1,0 +1,38 @@
+@node signal.h
+@section @file{signal.h}
+
+POSIX specification: @url{http://www.opengroup.org/susv3xbd/signal.h.html}
+
+Gnulib module: signal
+
+Portability problems fixed by Gnulib:
+@itemize
+@item
+@code{volatile sig_atomic_t} is rejected by older compilers on some
+platforms:
+AIX.
+@item
+@code{sigset_t} is only declared in <sys/types.h> on some platforms:
+mingw.
+@item
+@code{struct sigaction} and @code{siginfo_t} are missing on some
+platforms:
+mingw.
+@item
+@code{struct sigaction} lacks the @code{sa_sigaction} member on some
+platforms:
+Irix 5.3, Interix 3.5.
+@item
+The signal @code{SIGPIPE} is not defined on some platforms:
+mingw.
+@item
+The macro @code{SA_NODEFER} is not defined on some platforms:
+Interix 3.5.
+@end itemize
+
+Portability problems not fixed by Gnulib:
+@itemize
+@item
+Many signals are not defined on some platforms:
+mingw.
+@end itemize

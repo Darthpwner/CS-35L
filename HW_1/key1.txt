@@ -1,0 +1,72 @@
+Homework
+Exercise 1.1
+1. e m a c s e x e r 1 . h t m l
+2. C-s A S Backspace Backspace
+3. I n Backspace Backspace
+4. H T M L C-s C-b C-b C-b C-b
+5. C-s h u n t C-b C-b C-b C-b
+6. C-e
+7. C-a
+8. M- Shift <
+9. No, I was using Commands
+10. You can use searches to make it more efficient.
+11. C-x C-c
+
+Exercise 1.2
+1. C-s < ! - C-a C-k
+2. C-s ! C-a C-k
+3. C-s < ! C-a C-k C-n C-k C-n C-k
+4. C-s < ! C-d C-d C-d C-d C-d C-b C-d C-b C-d
+5. C-x C-s C-x C-c
+
+Exercise 1.3
+1. e m a c s e x e r 3 . h t m l
+2.C-s A C-f C-f C-f C-f C-f C-f C-f C-f C-f C-f C-f Backspace 3 5
+C-s A C-f C-f C-f C-f C-f C-f C-f C-f C-f C-f C-f Backspace 3 5
+3. C-s U T C-f Backspace Backspace S C-f C-f Backspace A S C I I
+4. M-Shift < C-s < o l C-e C-m
+5. C-x C-s C-x C-c
+
+Exercise 1.4
+1. c a t SP e x e r 2 . h t m l SP e x e r 2 . d i f f SP > e x e r 4 . h t m
+l Enter
+2. e m a c s SP e x e r 4 . h t m l
+3. M-Shift > C-r < ! - Enter C-SP C-u 7 C-f M-w C-r < p r e C-r C-n C-n C-n
+C-n C-e C-u 5 C-b C-y
+4. C-r < ! - C-r C-r C-r C-f C-b C-SP C-a C-n C-n C-n C-b M-w M-Shift < C-s S
+u b m i t C-n C-n C-y C-n C-p C-a C-d C-p C-d C-n C-n C-n C-n Backspace
+Backspace //Wikipedia comment
+
+M-Shift > C-r < ! - - C-r C-r Enter C-SP C-n C-b M-w C-r H o m e w o r k C-r
+C-n C-n C-y Backspace //DELETEME comment
+
+M-Shift > C-r < ! - C-r C-r C-r C-SP C-n C-n C-n C-b C-b M-w C-r L a b o r a t
+ o r y C-r C-n C-n C-y  //Chinese comment
+ 5. M-Shift < C-s - - - C-s Enter C-a C-SP M-Shift > C-w
+ 6. C-/
+ 7. C-s - - - C-s C-s C-a < ! - - SP C-s - - > C-b C-d C-s - - > C-b C-d C-s -
+ - > C-b C-d C-s - - > C-b C-d M-Shift > - - >
+ 8. M-Shift < C-s <ol> C-s C-s C-s C-s C-s //Six ordered lists. M-Shift <
+ M-Shift 5 < o l > Enter < O L > Enter !
+ 9. d i f f SP - u SP e x e r 1 . h t m l SP e x e r 4 . h t m l SP > e x e r 4
+  . d i f f
+
+  Exercise 1.5
+  1. M-x m k d i r Enter j u n k Enter
+  2. C-x C-f h e l l o . c Enter # i n c l u d e SP < s t d i o . h > Enter
+  i n t Enter m a i n SP ( v o i d ) Enter { Enter Tab p r i n t f SP ( " H e l
+  l o , w o r l d ! \ n " ) ; Enter Tab r e t u r n 0 ; Enter }
+  3. M-x c o m p i l e Enter Backspace Backspace Backspace Backspace Backspace
+   Backspace Backspace Backspace g c c SP - o SP h e l l o SP h e l l o . c Enter
+   4. M-x c o m p i l e Enter Backspace Backspace Backspace Backspace Backspace
+   Backspace Backspace Backspace Backspace Backspace Backspace Backspace
+   Backspace Backspace Backspace Backspace Backspace Backspace Backspace
+   Backspace . / h e l l o SP C-x b h e l l o - o u t Enter
+   5. M-x i n s e r t - b u f f e r Enter Enter M-x a p p e n d - t o - f i l e
+   Enter D e s k t o p / k e y 1 . t x t ~ / k e y 1 . t x t-*- mode: compilation;
+    default-directory: "~/" -*-
+    Compilation started at Sat Jan 10 01:03:35
+    ./hello hello-out
+    Hello, world!
+    Compilation finished at Sat Jan 10 01:03:35
+    

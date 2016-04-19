@@ -1,0 +1,29 @@
+Description:
+lchown() function: change ownership of a file, without following symlinks.
+
+Files:
+lib/lchown.c
+m4/lchown.m4
+
+Depends-on:
+chown
+errno
+lstat
+stdbool
+sys_stat
+unistd
+
+configure.ac:
+gl_FUNC_LCHOWN
+gl_UNISTD_MODULE_INDICATOR([lchown])
+
+Makefile.am:
+
+Include:
+<unistd.h>
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering, Eric Blake

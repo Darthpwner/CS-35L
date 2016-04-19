@@ -1,0 +1,47 @@
+#!/usr/local/cs/bin/bash
+
+sed '/<tr>/,/<\/td>/d' | \
+#Gets rid of all the English words
+
+grep '<td>.*</td>' |  \
+#Grabs the remaining Hawaiian words because those are contained in the td tags
+#A dot (.) means any one character and the star (*) means any number of 
+#characters.
+
+sed "s/<td>/""/g" | \
+#Searches for "<td>" and replaces with empty string
+sed "s/<\/td>/""/g" | \
+#Searches for "</td>" and replaces with empty string
+#sed "s/<\/tr>/""/g" | \
+#Searches for "</tr>" and replaces with empty string
+sed "s/<u>/""/g" | \
+#Searches for "<u>" and replaces with empty string
+sed "s/<\/u>/""/g" | \
+#Searches for "</u>" and replaces with empty string
+
+sed "s/,/\n/g" | \
+#treat commas as multiple words
+sed "s/[ ]/\n/g" | \
+#treat spaces as multiple words
+tr -d '\r' | \
+#Gets rid of the carriage returns caused by the newline character
+
+tr -d '[:blank:]' | \
+#Deletes blank space
+
+tr '[:upper:]' '[:lower:]' | \
+#Makes all the uppercase letters into lowercase
+
+sed "s/\`/\'/g" | \
+#Translates the grave accent (`) to apostrophe ('). Both grave accents and 
+#apostrophes are special characters so I have to use \ to signify this
+
+sed  "/[^pk\'mnwlhaeiou\n]/d" | \
+#Delete all lines that are not included in Hawaiian letters AND newline 
+#characters. The "^" is used to denote a complement
+
+sed '/^\s*$/d' | \
+#Gets rid of the empty line all the way at the top
+
+sort -u  #Sorts and gets rid of all the duplicate items
+

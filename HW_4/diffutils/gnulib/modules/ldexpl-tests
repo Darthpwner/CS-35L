@@ -1,0 +1,17 @@
+Files:
+tests/test-ldexpl.c
+tests/nan.h
+tests/signature.h
+tests/macros.h
+
+Depends-on:
+fpucw
+isnanl-nolibm
+signbit
+float
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-ldexpl
+check_PROGRAMS += test-ldexpl

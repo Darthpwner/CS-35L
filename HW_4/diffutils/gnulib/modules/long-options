@@ -1,0 +1,25 @@
+Description:
+Handle --help and --version options.
+
+Files:
+lib/long-options.h
+lib/long-options.c
+m4/long-options.m4
+
+Depends-on:
+getopt-gnu
+version-etc
+
+configure.ac:
+gl_LONG_OPTIONS
+
+Makefile.am:
+
+Include:
+"long-options.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

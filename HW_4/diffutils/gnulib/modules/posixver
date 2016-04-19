@@ -1,0 +1,24 @@
+Description:
+Determine desired POSIX specification version, according to user's environment
+variables.
+
+Files:
+lib/posixver.h
+lib/posixver.c
+m4/posixver.m4
+
+Depends-on:
+
+configure.ac:
+gl_POSIXVER
+
+Makefile.am:
+
+Include:
+"posixver.h"
+
+License:
+GPL
+
+Maintainer:
+Paul Eggert, Jim Meyering

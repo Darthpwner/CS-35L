@@ -1,0 +1,31 @@
+Description:
+rename() function: change the name or location of a file.
+
+Files:
+lib/rename.c
+m4/rename.m4
+
+Depends-on:
+canonicalize-lgpl
+dirname-lgpl
+lstat
+rmdir
+same-inode
+stdbool
+stdio
+strdup
+
+configure.ac:
+gl_FUNC_RENAME
+gl_STDIO_MODULE_INDICATOR([rename])
+
+Makefile.am:
+
+Include:
+<stdio.h>
+
+License:
+LGPL
+
+Maintainer:
+Jim Meyering

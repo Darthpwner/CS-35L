@@ -1,0 +1,102 @@
+#!/usr/local/cs/bin/python3
+
+"""
+### DESCRIPTION
+Output lines selected randomly from input file(s)
+
+### CONTRIBUTORS
+Copyright 2005 Paul Eggert.
+Copyright 2007 Paul Eggert.
+Copyright 2010 Darrell Benjamin Carbajal.
+Copyright 2014 Mario Tinoco.
+
+### LICENSE
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Please see <http://www.gnu.org/licenses/> for a copy of the license.
+"""
+
+import random, sys
+from optparse import OptionParser
+
+class randline:
+        def __init__(self):
+                    self.lines = list()
+
+                        def addFile(self, filename, unique):
+                                    f = open(filename, 'r')
+                                    for line in f.readlines():
+                                                    line = (line + "\n").replace("\n\n","\n")
+                                                    if(unique):
+                                                        try:
+                                                                               self.lines.remove(line)
+                                                        except:
+                                                                               pass
+                                                                                       self.lines.append(line)
+                                                                                               f.close()
+
+                                                                                                   def getLines(self):
+                                                                                                               return self.lines
+
+                                                                                                               def chooseline(self, noReplacement):
+                                                                                                                           line = random.choice(self.lines)
+                                                                                                                           if noReplacement:
+                                                                                                                                           self.lines.remove(line)
+                                                                                                                                                   return line
+
+                                                                                                                                               def main():
+                                                                                                                                                       version_msg = "%prog 3.0"
+                                                                                                                                                           usage_msg = """%prog [-uw] [-n number] FILE1 [FILE2 ...]
+
+Output number of randomly selected lines from FILEs"""
+
+                                                                                                                                                               # Setup the OptionParsr
+                                                                                                                                                                   parser = OptionParser(version=version_msg, usage=usage_msg)
+                                                                                                                                                                       parser.add_option("-n", "--numlines", action="store", dest="numlines",
+                                                                                                                                                                                                               default=1, help="output NUMLINES lines (1)")
+                                                                                                                                                                           parser.add_option("-u", "--unique", action="store_true",
+                                                                                                                                                                                                                   dest="unique", default=False,
+                                                                                                                                                                                                                   help="only use unique input lines (False)")
+                                                                                                                                                                               parser.add_option("-w", "--without-replacement", action="store_true",
+                                                                                                                                                                                                                       dest="noReplacement", default=False,
+                                                                                                                                                                                                                       help="only use a specific input line once (False)")
+                                                                                                                                                                               (options, args) = parser.parse_args(sys.argv[1:])
+
+                                                                                                                                                                                   # Check for valid numlines
+                                                                                                                                                                                   try:
+                                                                                                                                                                                               numlines = int(options.numlines)
+                                                                                                                                                                                   except:
+                                                                                                                                                                                               parser.error("invalid NUMLINES: " + repr(options.numlines))
+                                                                                                                                                                                                   # Check for positive numlines
+                                                                                                                                                                                                   if numlines < 0:
+                                                                                                                                                                                                               parser.error("negative NUMLINES: " + repr(numlines))
+                                                                                                                                                                                                                   # Check for minimum file count
+                                                                                                                                                                                                                   if len(args) < 1:
+                                                                                                                                                                                                                               parser.error("wrong number of files: " + repr(len(args)))
+
+                                                                                                                                                                                                                                   # Logic
+                                                                                                                                                                                                                                       generator = randline()
+
+                                                                                                                                                                                                                                       try:
+                                                                                                                                                                                                                                           for n in range(len(args)):
+                                                                                                                                                                                                                                                           generator.addFile(args[n], options.unique)
+                                                                                                                                                                                                                                                           if (options.noReplacement & (numlines > len(generator.getLines()))):
+                                                                                                                                                                                                                                                                           parser.error("requested lines is too large for input: "
+                                                                                                                                                                                                                                                                                                                 .format(numlines))
+                                                                                                                                                                                                                                                                                   # print out numlines of line
+                                                                                                                                                                                                                                                                                   for index in range(numlines):
+                                                                                                                                                                                                                                                                                                   sys.stdout.write(generator.chooseline(options.noReplacement))
+                                                                                                                                                                                                                                       except IOError as err:
+                                                                                                                                                                                                                                                   parser.error("I/O error({0}): {1}".format(err.errno, err.strerror))
+
+
+                                                                                                                                                                                                                                                   if __name__ == "__main__":
+                                                                                                                                                                                                                                                           main()

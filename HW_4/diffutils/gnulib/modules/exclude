@@ -1,0 +1,30 @@
+Description:
+Manage list of filenames or wildcard patterns for --exclude option processing.
+
+Files:
+lib/exclude.h
+lib/exclude.c
+m4/exclude.m4
+
+Depends-on:
+fnmatch
+hash
+mbscasecmp
+mbuiter
+stdbool
+verify
+xalloc
+
+configure.ac:
+gl_EXCLUDE
+
+Makefile.am:
+
+Include:
+"exclude.h"
+
+License:
+GPL
+
+Maintainer:
+Paul Eggert

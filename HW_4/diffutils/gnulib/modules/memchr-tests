@@ -1,0 +1,13 @@
+Files:
+tests/test-memchr.c
+tests/zerosize-ptr.h
+tests/signature.h
+tests/macros.h
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-memchr
+check_PROGRAMS += test-memchr

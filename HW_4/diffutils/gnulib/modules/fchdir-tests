@@ -1,0 +1,13 @@
+Files:
+tests/test-fchdir.c
+tests/signature.h
+tests/macros.h
+
+Depends-on:
+getcwd
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-fchdir
+check_PROGRAMS += test-fchdir

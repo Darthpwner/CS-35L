@@ -1,0 +1,25 @@
+Description:
+Read tokens from a stream.
+
+Files:
+lib/readtokens.h
+lib/readtokens.c
+m4/readtokens.m4
+
+Depends-on:
+xalloc
+stdbool
+
+configure.ac:
+gl_READTOKENS
+
+Makefile.am:
+
+Include:
+"readtokens.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

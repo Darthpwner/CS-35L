@@ -1,0 +1,34 @@
+Description:
+Discard pending data on both input and output streams.
+
+Files:
+lib/fflush.c
+lib/stdio-impl.h
+m4/fflush.m4
+
+Depends-on:
+fpurge
+ftello
+freading
+lseek
+stdio
+unistd
+fseeko
+
+configure.ac-early:
+AC_REQUIRE([AC_FUNC_FSEEKO])
+
+configure.ac:
+gl_FUNC_FFLUSH
+gl_STDIO_MODULE_INDICATOR([fflush])
+
+Makefile.am:
+
+Include:
+<stdio.h>
+
+License:
+GPL
+
+Maintainer:
+Eric Blake

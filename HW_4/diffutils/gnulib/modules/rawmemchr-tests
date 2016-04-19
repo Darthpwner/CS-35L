@@ -1,0 +1,12 @@
+Files:
+tests/test-rawmemchr.c
+tests/signature.h
+tests/macros.h
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-rawmemchr
+check_PROGRAMS += test-rawmemchr

@@ -1,0 +1,26 @@
+Description:
+Process command line arguments.
+
+Status:
+obsolete
+
+Notice:
+This module is obsolete. Use the module 'getopt-posix' or 'getopt-gnu' instead.
+
+Files:
+
+Depends-on:
+getopt-gnu
+
+configure.ac:
+
+Makefile.am:
+
+Include:
+<getopt.h>
+
+License:
+LGPL
+
+Maintainer:
+all, glibc

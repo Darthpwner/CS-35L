@@ -1,0 +1,20 @@
+@node write
+@section @code{write}
+@findex write
+
+POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/write.html}
+
+Gnulib module: write, sigpipe
+
+Portability problems fixed by Gnulib:
+@itemize
+@item
+When writing to a pipe with no readers, this function fails with error
+@code{EINVAL}, instead of obeying the current @code{SIGPIPE} handler, on
+some platforms:
+mingw.
+@end itemize
+
+Portability problems not fixed by Gnulib:
+@itemize
+@end itemize

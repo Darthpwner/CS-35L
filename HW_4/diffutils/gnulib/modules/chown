@@ -1,0 +1,29 @@
+Description:
+chown() function: change ownership of a file, following symlinks.
+
+Files:
+lib/chown.c
+lib/fchown-stub.c
+m4/chown.m4
+
+Depends-on:
+open
+stat
+stdbool
+sys_stat
+unistd
+
+configure.ac:
+gl_FUNC_CHOWN
+gl_UNISTD_MODULE_INDICATOR([chown])
+
+Makefile.am:
+
+Include:
+<unistd.h>
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

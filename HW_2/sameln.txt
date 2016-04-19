@@ -1,0 +1,55 @@
+#!/usr/local/cs/bin/bash
+D=$1
+
+#Separate hidden and non-hidden regular files
+RESULT=`ls -a $D | sort`   #Store all the files including hidden words into a 
+#variable "RESULT" and sort them  
+
+declare -a ARRAY 
+count=0
+
+IFS=$'\n' #Every newline stands for a new file. IFS ignores sequences of spaces
+#and tabs, and it treats them as part of the same file.
+
+for FILE in $RESULT
+do 
+    #Check if readable
+    if [ ! -r "$FILE" ]  #If the file is not readable, give an error statement
+    then
+	echo "Cannot read $FILE"
+    fi
+
+    #Check if symbolic link or hard link
+    if [ ! -L "$FILE" ]   #if not a symbolic link (represented by -L)
+    then
+	if [ -f "$FILE" ] #-f checks if it is a file
+	then	    
+	    ARRAY[$count]="$FILE"    #move file into array
+	    echo "${ARRAY[$count]} is a regular file"
+	    let count=count+1
+	else
+	    echo "$FILE is not regular file" #Give an error message
+	fi
+    fi
+done
+
+#Once we get all the files in the array, I will remove the duplicates in 
+#lexographic order
+for i in "${ARRAY[@]}"    #@ is the common syntax for an array index
+do
+    for j in "${ARRAY[@]}"    
+    do
+	if [ "$i" != "$j" ] #Compare the two array indices and check if they
+#are not equal to each other
+	then
+	    cmp -s -- "$i" "$j"  #"--" prevents errors with special starting 
+#characters #i.e. "*", " ", "#", etc.
+	    if [ $? -eq 0 ] #Check the previous line's return value ($?) and
+#check if it equals 0
+	    then
+		ln -f -- "$i" "$j"   #Deletes previous file link and replaces 
+#it with a hard link
+	    fi
+	fi
+    done
+done

@@ -1,0 +1,236 @@
+Laboratory log
+My original environment was in "en_US.UTF-8", so I had to use the shell 
+command "export LC_ALL='C'" in order to change the LC_CTYPE to "C". The 
+setting changes back to the default each time, so I had to keep calling the 
+shell command "export LC_ALL='C'" each time I restarted the console. In order
+ to sort a list of English words, I used the command "sort /usr/share/dict/
+words" in order to visibly see the results of the sorting and I put this into 
+a file called "words" by using "sort usr/share/dict/words > words". My next 
+step was to create a text file containing the HTML of this assignment's web 
+page by using the command "wget http://www.cs.ucla.edu/classes/winter15/cs35L/
+assign/assign2.html" in order to create a text file called "assign2.html".
+
+I used the format "<command> < assign2.html", where <command> can be replaced 
+by the six commands listed on the HTML web page. "tr" is an abbreviation of 
+"translate" and replaces or removes specific characters in its input data set
+ The flag "-c" stands for a complement (negation). When I typed in the first 
+command "tr -c 'A-Za-z' '[\n*]' < assign2.html", the words I saw on the 
+immediate console screen were "eggert", "Exp", "address", "body", and "html" 
+with "Exp" being immediately under "eggert" and "address" being several lines 
+below "Exp". "address", "body", and "html" are all separated by several lines 
+in that order from top to bottom. 
+
+The second command "tr -cs 'A-Za-z' '[\n*]' < assign2.html" produced an output
+of "Steve", "VanDeBogart", "copy", "Paul", "Eggert", "See", "a", "href", 
+"copyright", "html", "copying", "rules", "a", "br", "Id", "assign", "html", 
+"v", "eggert", "Exp", "address", "body", "html", with no empty lines between
+each word. Adding the "s" after "-c" squeezed the
+
+The third command "tr -cs 'A-Za-z' '[\n*] | sort < assign2.html" gave me many
+ blocks of text that would be too long to copy entirely on this log. The 
+console output's first line that appeared without scrolling up was "text file
+being standard input. Describe generally what each command". The sort command
+keeps the text file in order to "sort, merge, or sequence check text files" 
+(Source: IEEE link on the webpage). Each line is sorted alphabetically.
+
+The fourth command "tr -cs 'A-Za-z' '[\n*]' | sort -u < assign2.html" gave the
+same blocks of text from the third command, which I described above. The "-u"
+flag eliminates duplicates but the assign2.html did not have duplicates in the
+first place, which explains why the output was exactly the same for the third 
+and fourth commands.
+
+The fifth command "tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - words" gives me
+an alphabetized list of all the words in the file "words", which is an entire
+English dictionary. The last five words on the console were "zymurgy", 
+"zythem", "zythum", "zyzzyva", and "zyzzyvas". "comm - words" is used to 
+compare two files for common and distinct lines. It will list all the words 
+sorted.
+
+The sixth and last command "tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - 
+words" yielded an output with many blocks of HTML text separated by noticeable
+ but not significant amounts of blank space in between. The first line without 
+scrolling up is "carriage returns, and with no more than 80 columns per line.
+The shell", and the last three tags in order from earliest to the end are 
+"</address>", "</body>", and "</html". The flag "-23" is used to suppress 
+columns 2 and 3, which suppresses lines unique to FILE2 and lines that appear
+in both files, respectively. This means that we will be left with just column 1
+that contains lines unique to FILE1 from the man page of comm.
+
+I first used "wget http://mauimapp.com/moolelo/hwnwdseng.htm" to obtain a copy
+ of all the Hawaiian words, then I moved it into "hwords" using the command
+"cp hwnwdseng.htm hwords". After removing the original wget file using "rm
+hwnwdseng.htm", I created a shell scripting file using "echo "" > buildwords.sh
+" to make a shell file called "buildwords". This shell file will act as my
+Hawaiian words spell-checker. 
+
+My opening line in "buildwords.sh" was "#!/usr/local/cs/bin/bash" indicates 
+which shell I am using. In this case, I am using the bash shell, which I 
+specified at the very end of my path. I then used the format "sed '/pattern
+start/,/patternstop/d' in order to delete all the English words by specifying
+my range from <tr> to </td> with "<tr>" representing patternstart and "</td>"
+representing patternstop. Thus, my second line of actual code was "sed 
+'/<tr>/,/</td>/'. The remaining lines involved using search and replace to get
+ rid of the tags around the Hawaiian words. The format is "sed "s/what/
+replace/g"" where "what" represents the current string we want to replace, and
+ "replace" is the string we want to replace with. 
+
+On ending tags (denoted by </tag_name>), I used a backslash (\) before the 
+closing tag (/) to indicate that this is an ending tag instead of a separator.
+ I piped each line of sed using "|" to tell the system that each line of sed 
+is deleting from the same output. The backslash "\" after the pipe is used for
+readability to show that each line is part of the same command. Each line from
+the second line of actual code has "| \" as its suffix, so I will omit this 
+in future explanations for succintness. 
+
+My third line of code used grep to grab the Hawaiian words because once I 
+deleted the English words, anything between the <td> and </td> tags would be 
+Hawaiian words. The line I used was "grep '<tb>.*</td>'", where the dot 
+represents any single character and star is any number of characters.
+
+The next five lines of code involved getting rid of the <td>, </td>, </tr>, 
+<u>, </u> tags using the search and replace method for the sed command. I 
+replaced all the tags with an empty string (""). This followed the generic
+format of sed "s/<tag>/""/g" where <tag> was replaced by the tag that I wanted
+to get rid of.
+
+After that, I separated Hawaiian words that were placed in between commas 
+and/or spaces and treated them as multiple words. To do this, I used the two
+commands "sed "s/,/\n/g" and "sed "s/[]/\n/g" to search for commas and spaces
+and replace them with the newline character, respectively. However, I noticed
+that these two commands had strange side effects and produced a "^M" character
+for each line, so I looked up a command to remove carriage returns caused by
+the newline character. This command was "tr -d '\r'".
+
+Next, I deleted all the blank spaces using the line "tr -d '[:blank:]' that I
+copied from Gopal's Lab hints on Week 2 Slides . At this point, I had 
+exclusively Hawaiian words in the dictionary, and I had to fix some formatting
+ details. I changed all the first letters of each word from uppercase to 
+lowercase by typing "tr '[:upper:]' '[:lower:]' |", and I also translated all 
+the grave accents to apostrophes using "sed "s/\`/\'/g" |". An important thing
+ to note is the use of the backspace character (\) to denote that the grave 
+accent (`) and the apostrophe (') are special characters and we have to treat 
+them as escape characters.
+
+The final step to fixing up the Hawaiian dictionary involved removing all 
+characters not in the Hawaiian lexicon. To do this, I took the complement of
+all the Hawaiian characters including the apostrophe and the newline character
+and used the sed command on this. The exact line was "sed "/[^pk\'mkwlhaeiou
+\n]/d". After this, I noticed there was an empty line right at the top, so I 
+removed this using "sed '/^\s*$/d'".
+
+Lastly, I typed up the line "sort -u", which sorted all the Hawaiian words 
+remaining on my list in alphabetical order and -u prevented repeated words. 
+
+After I checked all these lines in my script, I searched each letter that is 
+NOT a Hawaiian character using "/[char]", where char was a comprehensive list
+of English characters {b, c, d, f, g, j, q, r, s, t, v, x, y, z} that were not
+part of the Hawaiian lexicon.
+
+In order to test my script, I used the command on terminal "cat hwnwdseng.htm
+| ./buildwords.sh | less". I got a comprehensive list of 205 Hawaiian words 
+with no blank lines in between and in alphabetical order. The first five words
+ in my new dictionary were "'a'ole", "'ae", "'aina", "'anakala", and "'anake". 
+The last five words in my new dictionary were "wai", "wakea", "wauke", 
+"weka", and "wiki". 
+
+Following the instructions on the lab spec, I copied my shell script code 
+below:
+#BEGINNNING OF SHELL SCRIPT CODE
+#!/usr/local/cs/bin/bash
+
+sed '/<tr>/,/<\/td>/d' | \
+#Gets rid of all the English words
+
+grep '<td>.*</td>' |  \
+#Grabs the remaining Hawaiian words because those are contained in the td tags
+#A dot (.) means any one character and the star (*) means any number of 
+#characters.
+
+sed "s/<td>/""/g" | \
+#Searches for "<td>" and replaces with empty string
+sed "s/<\/td>/""/g" | \
+#Searches for "</td>" and replaces with empty string
+sed "s/<\/tr>/""/g" | \
+#Searches for "</tr>" and replaces with empty string
+sed "s/<u>/""/g" | \
+#Searches for "<u>" and replaces with empty string
+sed "s/<\/u>/""/g" | \
+#Searches for "</u>" and replaces with empty string
+
+sed "s/,/\n/g" | \
+#treat commas as multiple words
+sed "s/[ ]/\n/g" | \
+#treat spaces as multiple words
+tr -d '\r' | \
+#Gets rid of the carriage returns caused by the newline character
+
+tr -d '[:blank:]' | \
+#Deletes blank space
+
+tr '[:upper:]' '[:lower:]' | \
+#Makes all the uppercase letters into lowercase
+
+sed "s/\`/\'/g" | \
+#Translates the grave accent (`) to apostrophe ('). Both grave accents and 
+#apostrophes are special characters so I have to use \ to signify this
+
+sed  "/[^pk\'mnwlhaeiou\n]/d" | \
+#Delete all lines that are not included in Hawaiian letters AND newline 
+#characters. The "^" is used to denote a complement
+
+sed '/^\s*$/d' | \
+#Gets rid of the empty line all the way at the top
+
+sort -u  #Sorts and gets rid of all the duplicate items 
+#END OF SHELL SCRIPT CODE
+
+Once I was sure that my cat call was successful in extracting the Hawaiian 
+words, I used "cat hwnwdseng.htm | ./buildwords.sh | less > hwords" to make
+the program's (represented by the cat call) stdout to be the hwords file.
+
+To perform the spell checking operations, I first checked the Hawaiian 
+dictionary against itself to make sure that there were no problems with my 
+hwords file. To do this, "tr -cs "pk\'mnwlhaeiou" '[\n*]' < hwords | sort -u |
+comm -23 - hwords". Once I was certain of this, I started to perform spell 
+check on the assign2.html page, which I fetched with Wget earlier in the lab.
+
+I first ran the Hawaiian word spell checker on assign2.html using the command:
+"tr '[:upper:]' '[:lower:]' < assign2.html | tr -cs 'A-Za-z`' '[\n*]' | 
+sort -u | comm -23 - hwords | wc -w". This line made every word in the HTML 
+page into a lowercase letter using the translate section. The second part 
+performed spell checking on all the Hawaiian letters and I checked the number 
+of misspelled Hawaiian words to be 406 words.
+
+Next, I checked the number of misspelled English words by typing in "tr 
+'[:upper:]' '[:lower:]' < assign2.html | tr -cs "A-Za-z" '[\n*]' | sort -u | 
+comm -23 - words | wc -w". This line of code's execution output 38 English 
+words that were misspelled.
+
+In order to compare the results of the misspelled English or Hawaiian words, I
+created two temporary files using the commands "cat assign2.html | tr 
+'[:upper:]' '[:lower:]' | tr -cs 'A-Za-z`' '[\n*]' | sort -u | comm -23 -hwords
+> temp_hawaiian" and "cat assign2.html | tr '[:upper:]' '[:lower:]' | tr -cs 
+'A-Za-z' '[\n*]' | sort -u | comm -23 - words > temp_english" and used the 
+command "comm temp_hawaiian temp_english" in order to get an output for the 
+misspelled words in three respective columns: Hawaiian, English, and both in 
+that order.
+
+Misspelled Hawaiian:
+1) able
+2) dictionary
+3) hawaiian
+4) report
+5) transcript
+
+Misspelled English:
+1) halau
+2) lau
+3) wiki
+
+Misspelled Both:
+1) ctype
+2) eggert
+3) seasnet
+4) vandebogart
+5) www
+

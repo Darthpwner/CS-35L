@@ -1,0 +1,12 @@
+The first step was to create the executables for "srot13.c" and "srot13u.c". I
+accomplished this by running "gcc -o srot13_cmp -g srot13.c" and "gcc -o srot13
+-g srot13u.c", respectively, to create my object files. I then changed the 
+permissions for each using "chmod u+x <srot_type>" to make them executable 
+where <srot_type> could be either "srot13_cmp" or "srot13".
+
+The differences in performance between srot13 and srot13u using the "time" 
+command are described in the following format: "time ./<srot_type> < 
+<file_name>", where <srot_type> is either "srot13" or "srot13_cmp" and I tested
+6 values for <file_name>: (1) 1k.txt, (2) 5k.txt, (3) 10k.txt, (4) 20k.txt, (5)
+50k.txt, and (6) 100k.txt. I generated these files with a file called 
+"line_gen.c", which contained a for loop 

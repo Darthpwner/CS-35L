@@ -1,0 +1,3 @@
+printf '\0Gur\n\0Dhvpx\n\0Oebja\n\0sbk\n\twhzcf\n\tbire\n\tgur\n\tynml\n\tqbt.' |
+./srot13 |
+od -c

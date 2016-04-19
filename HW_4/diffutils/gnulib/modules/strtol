@@ -1,0 +1,24 @@
+Description:
+strtol() function: convert string to 'long'.
+
+Files:
+lib/strtol.c
+m4/strtol.m4
+
+Depends-on:
+wchar
+
+configure.ac:
+gl_FUNC_STRTOL
+
+Makefile.am:
+
+Include:
+<stdlib.h>
+
+License:
+LGPL
+
+Maintainer:
+glibc
+

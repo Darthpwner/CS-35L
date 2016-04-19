@@ -1,0 +1,55 @@
+Q1. Syntactically, the line "case_long_iso_time_style:" was incorrect because 
+of the underscore "_" after "case" and before "long". This means that the 
+line became a GOTO statement, so as the program executes, it will jump to a 
+different line once it reaches the GOTO statement IF AND ONLY IF there is a 
+condition that indicates where execution jumps to. It was NOT necessary to 
+remove the line because the GOTO statement would just execute normally and run
+through because there was no condition to return to and branch off. In this 
+case, it would just continue execution normally. The line immediately above 
+was the syntactically correct way of writing it: "case long_iso_time_style:". 
+
+Q2. If the company were to adopt the patch as the default for Coreutils, it 
+only works in a locale that has not been specified for any particular 
+language. If we use a different language for this patch, we have to specify 
+the locale for that language. This patch will no longer work in that locale 
+because it only works on non-specified locales. Our patch will no longer work 
+for a language like Chinese or Hawaiian, for example, because we would have to
+specify a locale. 
+
+Q3. If I run the script "randline.py" on an empty file like "/dev/null" using
+the command "./randline.py /dev/null", I get the following message:
+
+Traceback (most recent call last):
+ File "./randline.py", line 70, in <module>
+  main()
+ File "./randline.py", line 64, in main
+  sys.stdout.write(generator.chooseline())
+ File "./randline.py", line 34, in chooseline
+  return random.choice(self.lines)
+ File "/usr/lib64/python2.6/random.py", line 261, in choice
+  return seq[int(self.random() * len(seq))]  #raises IndexError if seq is empty
+IndexError: list index out of range
+
+The reason for this error is that the "/dev/null" file was empty and we were
+trying to return a sequence of numbers from that file. When the script tries
+to run line 261, an exception will be thrown since we are accessing an invalid
+index.
+
+Q4. I first used the command "export PATH=/usr/local/cs/bin:$PATH" to allow 
+myself to run the command "python3" to test my script. I invoked the 
+"randline.py" script on Python 3 by using teh command "python3 randline.py" and
+got an error message as follows:
+
+    File "randline.py", line 65
+     except IOError as (errno, strerror):
+     	    	       ^
+SyntaxError: invalid syntax
+
+There is a problem in exception handling on line 65, which says "except IOError
+as (errno, strerror):" I have read that Python 3 is not very backwards 
+compatible with Python 2, which can be used to explain the syntax error when I
+use the open parentheses "(". The problem here is that Python 3 is more strict
+in that it does not allow two variables to be packed together and unpacked 
+automatically in the same way as Python 2. Any form of unpacking must be done
+manually. When I fixed the code, I combined the two varaibles into one to manually
+unpack them.

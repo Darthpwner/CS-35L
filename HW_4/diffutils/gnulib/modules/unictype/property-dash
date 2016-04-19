@@ -1,0 +1,26 @@
+Description:
+Test whether a Unicode character is "dash".
+
+Files:
+lib/unictype/pr_dash.c
+lib/unictype/pr_dash.h
+lib/unictype/bitmap.h
+
+Depends-on:
+unictype/base
+
+configure.ac:
+AC_REQUIRE([AC_C_INLINE])
+
+Makefile.am:
+lib_SOURCES += unictype/pr_dash.c
+
+Include:
+"unictype.h"
+
+License:
+LGPL
+
+Maintainer:
+Bruno Haible
+

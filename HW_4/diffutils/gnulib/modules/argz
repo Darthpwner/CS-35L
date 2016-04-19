@@ -1,0 +1,40 @@
+Description:
+Argv style string arrays in a single null delimited char*.
+
+Files:
+lib/argz.in.h
+lib/argz.c
+m4/argz.m4
+
+Depends-on:
+memmove
+mempcpy
+stpcpy
+strndup
+strnlen
+strstr
+
+configure.ac:
+gl_FUNC_ARGZ
+
+Makefile.am:
+BUILT_SOURCES += $(ARGZ_H)
+
+# We need the following in order to create <argz.h> when the system
+# doesn't have one that works with the given compiler.
+argz.h: argz.in.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+	  cat $(srcdir)/argz.in.h; \
+	} > $@-t && \
+	mv -f $@-t $@
+MOSTLYCLEANFILES += argz.h argz.h-t
+
+Include:
+<argz.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+all

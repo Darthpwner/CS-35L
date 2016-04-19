@@ -1,0 +1,27 @@
+Description:
+ioctl() function: issue device specific requests on files, devices, or sockets.
+
+Files:
+lib/ioctl.c
+lib/w32sock.h
+m4/ioctl.m4
+
+Depends-on:
+sys_ioctl
+sys_socket
+errno
+
+configure.ac:
+gl_FUNC_IOCTL
+gl_SYS_IOCTL_MODULE_INDICATOR([ioctl])
+
+Makefile.am:
+
+Include:
+<sys/ioctl.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+Paolo Bonzini, Simon Josefsson, Bruno Haible

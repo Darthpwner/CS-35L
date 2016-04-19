@@ -1,0 +1,37 @@
+Description:
+A correct <float.h>.
+
+Files:
+lib/float.in.h
+m4/float_h.m4
+
+Depends-on:
+include_next
+
+configure.ac:
+gl_FLOAT_H
+
+Makefile.am:
+BUILT_SOURCES += $(FLOAT_H)
+
+# We need the following in order to create <float.h> when the system
+# doesn't have one that works with the given compiler.
+float.h: float.in.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
+	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
+	      -e 's|@''NEXT_FLOAT_H''@|$(NEXT_FLOAT_H)|g' \
+	      < $(srcdir)/float.in.h; \
+	} > $@-t && \
+	mv $@-t $@
+MOSTLYCLEANFILES += float.h float.h-t
+
+Include:
+<float.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+all

@@ -1,0 +1,12 @@
+Files:
+tests/signature.h
+tests/test-perror.c
+tests/test-perror.sh
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-perror.sh
+check_PROGRAMS += test-perror

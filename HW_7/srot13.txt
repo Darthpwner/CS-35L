@@ -1,0 +1,108 @@
+The first step was to create the executables for "srot13.c" and "srot13u.c". I
+accomplished this by running "gcc -o srot13_cmp -g srot13.c" and "gcc -o srot13
+-g srot13u.c", respectively, to create my object files. I then changed the 
+permissions for each using "chmod u+x <srot_type>" to make them executable 
+where <srot_type> could be either "srot13_cmp" or "srot13".
+
+The differences in performance between srot13 and srot13u using the "time" 
+command are described in the following format: "time ./<srot_type> < 
+<file_name>", where <srot_type> is either "srot13" or "srot13_cmp" and I tested
+6 values for <file_name>: (1) 1k.txt, (2) 5k.txt, (3) 10k.txt, (4) 20k.txt, (5)
+50k.txt, and (6) 100k.txt. I generated these files with a file called 
+"line_gen.c", which contained a for loop that would iterate and print to a file
+a set amount of time that I created.
+
+The speed results for the commands are as follows. The numbers correspond to 
+the size of the text file, and I ran both "srot13" and "srot13_cmp" on each 
+text file.
+
+(1) "time ./srot13 < 1k.txt"
+    real    0m0.024s
+    user    0m0.001s
+    sys     0m0.005s
+
+    "time ./srot_13cmp < 1k.txt"
+    real    0m0.019s
+    user    0m0.001s
+    sys     0m0.001s
+
+(2) "time ./srot13 < 5k.txt"
+    real    0m0.067s
+    user    0m0.002s
+    sys     0m0.027s
+
+    "time ./srot13_cmp < 5k.txt"
+    real    0m0.029s
+    user    0m0.003s
+    sys     0m0.008s
+
+(3) "time ./srot13 < 10k.txt"
+    real    0m0.114s
+    user    0m0.003s
+    sys     0m0.051s
+
+    "time ./srot13_cmp < 10k.txt"
+    real    0m0.060s
+    user    0m0.006s
+    sys     0m0.017s
+
+(4) "time ./srot13 < 20k.txt"
+    real    0m0.147s
+    user    0m0.008s
+    sys     0m0.066s
+
+    time ./srot13_cmp < 20k.txt"
+    real    0m0.079s
+    user    0m0.009s
+    sys     0m0.033s
+
+(5) "time ./srot13 < 50k.txt"
+    real    0m0.580s
+    user    0m0.031s
+    sys     0m0.232s
+
+    "time ./srot13_cmp < 50k.txt"
+    real    0m0.247s
+    user    0m0.035s
+    sys     0m0.083s
+
+(6) "time ./srot13 < 100k.txt"
+    real    0m0.782s
+    user    0m0.047s
+    sys     0m0.302s
+
+    "time ./srot13_cmp < 100k.txt"
+    real    0m0.473s
+    user    0m0.043s
+    sys     0m0.126s
+
+The common trend that I noticed when comparing "srot13" and "srot13_cmp" was 
+that "srot13_cmp" executed the print statements at a much faster rate than the
+"srot13" executable file. This was extremely noticeable as the files grew 
+exponentially larger such as the "100k.txt" file, which was 0.309s faster when
+running "srot13_cmp" versus "srot13". This was a much larger gap than running 
+the "1k.txt" file, which had only a minute difference of 0.005s in improved
+speed performance for the "srot13_cmp" versus "srot13".   
+
+In addition to measuring the performance differences between "srot13" and 
+"srot13_cmp", I also measured the corresponding number of comparisons as a 
+function of the number of input lines. The data is shown below:
+
+Number of lines	       Number of Comparisons
+1000   	  	       4932
+5000		       29804
+10000		       64608
+20000		       139216
+50000		       382512
+100000		       815024		  
+
+When I plotted this on an Excel spreadsheet to see the trendline, I noticed
+that the graph approximated an exponential curve but still was relatively 
+linear based on the plot I obtained. The sorting function "qsort" is based on
+quicksort, which has a Big-O time complexity of O(n log n). However, mine did
+not necessarily fall in that range even though it was a exponential scale; this
+suggests that the time complexity of "qsort" can range from O(n log n) to 
+O(n^2) depending on the srot13 algorithm used. Personally, I would say mine
+was closer to linear time O(n), but the my results did have exponential 
+behavior.
+

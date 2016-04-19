@@ -1,0 +1,10 @@
+for i in "abc bcd cdf"; then
+    echo "$i"
+endfor
+
+a. there are syntax errors
+b. it will print abc bcd cdf in one line
+c. it will print abc cdf in 3 lines
+d. then and endfor are the only syntax errors
+
+Answer: ad

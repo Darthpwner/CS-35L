@@ -1,0 +1,32 @@
+Description:
+Convert internet address from internal to printable, presentable format.
+
+Files:
+lib/inet_ntop.c
+m4/inet_ntop.m4
+
+Depends-on:
+socklen
+sys_socket
+arpa_inet
+errno
+netinet_in
+extensions
+
+configure.ac:
+gl_FUNC_INET_NTOP
+gl_ARPA_INET_MODULE_INDICATOR([inet_ntop])
+
+Makefile.am:
+
+License:
+LGPLv2+
+
+Include:
+<arpa/inet.h>
+
+Link:
+$(INET_NTOP_LIB)
+
+Maintainer:
+Yoann Vandoorselaere, glibc

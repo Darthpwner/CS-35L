@@ -1,0 +1,24 @@
+Description:
+An interface to the read() function that retries after interrupts.
+
+Files:
+lib/safe-read.h
+lib/safe-read.c
+m4/safe-read.m4
+
+Depends-on:
+ssize_t
+
+configure.ac:
+gl_SAFE_READ
+
+Makefile.am:
+
+Include:
+"safe-read.h"
+
+License:
+LGPLv2+
+
+Maintainer:
+Jim Meyering, Bruno Haible

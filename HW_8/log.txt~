@@ -1,0 +1,36 @@
+I first ran "cd /usr/local/cs/bin/" and then I ran "sort --version" to check 
+that I am using a new-enough version. The current version of GNU coreutils was
+8.4 and had a copyright date of 2010, so I needed to update my version to 8.6.
+To fix this and attach it to my path, I ran "exec /usr/local/cs/bin/bash" to
+add to the file .login in my home directory. I then added .bash_profile and 
+.bashrc to my home directory via "export PATH=/usr/local/cs/bin:$PATH". I 
+checked my path using "echo $PATH", which showed /usr/local/cs/bin at the start
+of my list, so the setup was successful. 
+
+I returned to my home directory via "cd" and then changed back to the "/usr/
+local/cs/bin" directory, but this returned to version 8.23. However, upon 
+asking Sharath, he told me to check echo $PATH again, and upon seeing that my 
+path was fine, he told me to execute "which sort", which gave an output of 
+"usr/local/cs/bin/sort", and he told me this would work fine. I then followed
+the process of generating the file by running "od -An -t f8 -N 80000000 < /dev/
+urandom | tr -s ' ' '\n' > random.txt". This generated a random file of 
+10,000,000 random double-precision floating point numbers. I used "80000000" as
+the size because that a "double" is presented by 8 bytes, and I multiplied 8 by
+10 million. I also used the "-t" flag and "f8" instead of "-f" because I was
+getting a write error when I ran the original command on Sharath's and Ruolin's
+slides: "od -An -f -N 80000000 M /dev/urandom | tr -s ' ' '\n' > random.txt".
+
+The test data was contained in "random.txt", so I invoked the sort command
+with the --parallel and -g options. The exact command format I ran was in the
+form "time -p sort -g --parallel=<number_of_threads> random.txt > dev/null", 
+where <number_of_threads> was the input set {1, 2, 4, 8}. The following timings
+are represented below:
+
+1 thread:
+
+2 threads:
+
+
+4 threads:
+
+8 threads:

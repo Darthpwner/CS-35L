@@ -1,0 +1,24 @@
+Description:
+Case-insensitive string comparison functions.
+
+Files:
+lib/strcasecmp.c
+lib/strncasecmp.c
+m4/strcase.m4
+
+Depends-on:
+strings
+
+configure.ac:
+gl_STRCASE
+
+Makefile.am:
+
+Include:
+<strings.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+Bruno Haible

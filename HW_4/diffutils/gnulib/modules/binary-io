@@ -1,0 +1,22 @@
+Description:
+Binary mode I/O.
+
+Files:
+lib/binary-io.h
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += binary-io.h
+
+Include:
+"binary-io.h"
+
+License:
+LGPL
+
+Maintainer:
+Bruno Haible
+

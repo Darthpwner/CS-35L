@@ -1,0 +1,26 @@
+Description:
+strsep() function: extract token from string.
+
+Files:
+lib/strsep.c
+m4/strsep.m4
+
+Depends-on:
+extensions
+string
+strpbrk
+
+configure.ac:
+gl_FUNC_STRSEP
+gl_STRING_MODULE_INDICATOR([strsep])
+
+Makefile.am:
+
+Include:
+<string.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+Yoann Vandoorselaere

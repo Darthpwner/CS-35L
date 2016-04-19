@@ -1,0 +1,33 @@
+Description:
+wcsnrtombs() function: convert wide string to string.
+
+Files:
+lib/wcsnrtombs.c
+lib/wcsrtombs-state.c
+m4/wcsnrtombs.m4
+m4/mbrtowc.m4
+m4/mbstate_t.m4
+m4/locale-ja.m4
+m4/locale-zh.m4
+m4/codeset.m4
+
+Depends-on:
+extensions
+wchar
+wcrtomb
+
+configure.ac:
+gl_FUNC_WCSNRTOMBS
+gl_WCHAR_MODULE_INDICATOR([wcsnrtombs])
+
+Makefile.am:
+
+Include:
+<wchar.h>
+
+License:
+LGPL
+
+Maintainer:
+Bruno Haible
+

@@ -1,0 +1,26 @@
+@node netdb.h
+@section @file{netdb.h}
+
+POSIX specification: @url{http://www.opengroup.org/susv3xbd/netdb.h.html}
+
+Gnulib module: netdb
+
+Portability problems fixed by Gnulib:
+@itemize
+@item
+This header file is missing on some platforms:
+mingw, BeOS.
+
+@item
+This header file is incomplete on some platforms:
+Cygwin 1.5.x, Haiku.
+
+@item
+This header file does not define @code{AI_ALL}, @code{AI_V4MAPPED},
+@code{AI_ADDRCONFIG} on some platforms:
+NetBSD 5.0.
+@end itemize
+
+Portability problems not fixed by Gnulib:
+@itemize
+@end itemize

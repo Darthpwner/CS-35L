@@ -1,0 +1,26 @@
+Description:
+Return file system space usage info.
+
+Files:
+lib/fsusage.h
+lib/fsusage.c
+m4/fsusage.m4
+
+Depends-on:
+full-read
+stdbool
+stdint
+
+configure.ac:
+gl_FSUSAGE
+
+Makefile.am:
+
+Include:
+"fsusage.h"
+
+License:
+LGPL
+
+Maintainer:
+Jim Meyering

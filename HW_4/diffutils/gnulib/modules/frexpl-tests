@@ -1,0 +1,18 @@
+Files:
+tests/test-frexpl.c
+tests/nan.h
+tests/signature.h
+tests/macros.h
+
+Depends-on:
+fpucw
+isnanl-nolibm
+signbit
+float
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-frexpl
+check_PROGRAMS += test-frexpl
+test_frexpl_LDADD = $(LDADD) @FREXPL_LIBM@

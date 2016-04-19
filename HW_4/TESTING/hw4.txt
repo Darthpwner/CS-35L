@@ -1,0 +1,125 @@
+1. This will be my homework log.
+2. I ran the command "git checkout v3.0 -b quote" while in the diffutils 
+directory and got the following output:
+
+M       src/cmp.c
+M       src/diff.c
+M       src/diff3.c
+M       src/dir.c
+M       src/sdiff.c
+M       src/util.c
+Switched to a new branch 'quote'
+
+3. I ran "patch -p1 < quote-3.0-patch.txt" in the diffutils and patched the
+following files:
+
+src/cmp.c
+src/diff.c
+src/diff3.c
+src/dir.c
+src/sdiff.c
+src/util.c
+
+4. The Emacs command C-x 4 a will add a new entry into the change log for the
+file that I am currently editing. Additionally, it will also create a new item
+for the current file.
+5. I entered Emacs for the file "quote-3.0-patch.txt" using "emacs quote-3.0-
+patch.txt" and then I ran the command for add-change-log-entry-ther window (C-x
+4 a). The initial output was in the form of an email and looked like this:
+
+2015-01-30  Matthew Allen Lin  <linm@lnxsrv02.seas.ucla.edu>
+
+        * src/quote-3.0-patch.txt:
+
+I obtained this output using "C-x 4 a" as mentioned earlier. I added a brief
+description of the purpose of the patch as follows:
+
+	This v3.0 patch fixes the GNU Diffutils application, which previously 
+	used the backtick character in place of single quotations. 
+	Professor Eggert's patch changes all backticks in code (not comments) 
+	to single quotations to follow the UNICODE format.
+
+6. I committed the changes I made to the "quote" branch by changing my 
+directory to src via "cd src" and then I added the following files: "git add 
+cmp.c diff.c diff3.c dir.c sdiff.c util.c". I concatenated the results of 
+my modification by using "cat ../ChangeLog", which concatenates based on the 
+file ChangeLog obtained in the previous directory. This displayed my message as
+output to the console and I simply copied the message that I wrote in step 5 to
+the following command "git commit -m "<message>"" where message is the text I 
+wrote in ChangeLog. I had a few problems actually pasting the message for some
+reason which said "<words> did not match any file(s) known to git." where 
+<words> were text I wrote in the ChangeLog. I realized I had to put my message
+in quotes after four commits, so I typed in the command "git commit -m 
+".Professor Eggert's patch changes all backticks in code (not comments) to 
+single quotations to follow the UNICODE format.", and this gave me the 
+following message:
+
+[quote e6a1fc8] This v3.0 patch fixes the GNU Diffutils application, which 
+previously used the backtick character in place of single quotations
+ Committer: Matthew Allen Lin <linm@lnxsrv01.seas.ucla.edu>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+If the identity used for this commit is wrong, you can fix it with:
+
+    git commit --amend --author='Your Name <you@example.com>'
+
+ 6 files changed, 45 insertions(+), 45 deletions(-)
+[linm@lnxsrv01 ~/CS_35L/HW_4/HW_4_AAA/diffutils/src]$ .Professor Eggert's 
+patch changes all backticks in code (not comments) to single quotations to 
+follow the UNICODE format.
+
+7. I first checked what the output of "git format-patch" would look like by 
+typing and entering "git format-patch -1 --stdout". This showed the patch info
+with a lot of diff information. To actually generate the file, I did "git 
+format-patch -1 -stdout > formatted-patch.txt.
+8. I did not have a partner, so I decided to do this by myself by creating a 
+new directory called "partner" and moving my "formatted-patch.txt" into the new
+directory via "mv formatted-patch.txt partner". From there, I used "git am <
+formatted-patch.txt" but this gave me a problem that was repeatedly posted on 
+Piazza, but I didn't get an answer to until the day after this assignment was 
+due. I got the following error repeatedly: 
+
+previous rebase directory /w/home.03/cs/ugrad/linm/CS_35L/HW_4/HW_4_AAA/diffutils/.git/rebase-apply still exists but mbox given.
+
+Needless to say, I grew increasingly frustrated since I had to work on this lab
+at SB Hacks and my teammates were angry at me as well. Finally, a kind soul 
+named Akash decided to give me the magic command to fix this bug: this command
+was "git am --abort". After running "git am < formatted-patch.txt" once more, 
+it finally worked, which applied my commit! The command "make check" also ran
+smoothly, outputting the following: 
+
+make  check-am
+make[1]: Entering directory `/w/home.03/cs/ugrad/linm/CS_35L/HW_4/HW_4_AAA/diffutils/src'
+  CC       cmp.o
+  CCLD     cmp
+  CC       diff.o
+  CC       dir.o
+  CC       util.o
+  CCLD     diff
+  CC       diff3.o
+  CCLD     diff3
+  CC       sdiff.o
+  CCLD     sdiff
+make[1]: Leaving directory `/w/home.03/cs/ugrad/linm/CS_35L/HW_4/HW_4_AAA/
+diffutils/src'
+
+I then ran it on my main directory "diffutils" and proceeded with the following
+steps. It went through pretty smoothly until it got into /bin/sh, where there 
+were some errors checking "[basic.log]", "[check-TESTS]", "[check-am]", and
+"[check-recursive]".
+9. I ran "make disdir" and noticed that many of my files were successfully 
+patched as the code executed for a very long time. Including every line of 
+output would be far too extensive and not worth the time, but something 
+significant that I did notice was that there were a few errors towards the end
+of type Error 123, 2, and 1. To check, I ran "ls" and saw that my directory 
+that was created was diffutils-3.0.5-dcb4. I changed into this directory with
+"cd diffutils-3.0.5-dcb4", then I ran emacs on ChangeLog: "emacs ChangeLog". 
+The result of this showed me the exact commits I made previously, verifying
+that my test was a success.
+
+10.

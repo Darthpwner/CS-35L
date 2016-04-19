@@ -1,0 +1,24 @@
+Description:
+Convert string to 'double', with error checking.
+
+Files:
+lib/xstrtod.h
+lib/xstrtod.c
+m4/xstrtod.m4
+
+Depends-on:
+stdbool
+
+configure.ac:
+gl_XSTRTOD
+
+Makefile.am:
+
+Include:
+"xstrtod.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

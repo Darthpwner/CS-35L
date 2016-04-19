@@ -1,0 +1,27 @@
+Description:
+Parametrizable hash table.
+
+Files:
+lib/hash.c
+lib/hash.h
+m4/hash.m4
+
+Depends-on:
+bitrotate
+stdbool
+stdint
+xalloc
+
+configure.ac:
+gl_HASH
+
+Makefile.am:
+
+Include:
+"hash.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

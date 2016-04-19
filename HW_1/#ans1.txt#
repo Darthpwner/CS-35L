@@ -1,0 +1,92 @@
+1) I first typed in the line "man man", and found the description for what the
+ command -k does. From here, I found that you type in the line "man -k <word>",
+  where word is whatever string you want to search for. This will give you the
+  substring in all the descriptions of man.
+  2) I followed the general structure "whereis <program>", where program is the
+  name of the program. In this case, I simply typed in "whereis cp" and "whereis
+   wc" where the paths are /bin/cp and /usr/bin/wc, respectively.
+   3)I followed Gopal's instructions for setting up the PATH variable and I used
+    the command "echo $PATH" to get a list of directories to check. Only two of
+    the directories had a list of executable files: 1. "cd /usr/local/cs/bin" and
+    2. "cd /usr/bin. The first file only had one executable program that was one
+    character long "[", but the second file had a total of three exectuable
+    programs that were one character lonag "[", "w", and "X".
+    4)I checked the symbolic link of /usr/bin/cc by executing "file /usr/bin/cc".
+    The shell displayed that the path was a symbolic link to 'gcc', so the file
+    gcc is the one that is actually executed.
+    5)The symbolic mode g-s means that we remove permissions for the group ids
+    from execution in the file. I tested this by creating an arbitrary file called
+    Matthew. From here, I executed "chmod g+s Matthew" to make Matthew give
+    permissions for group ids in the file which set the "S" bit when I called
+    "ls - l Matthew". Then, I used "chmod g-s Matthew" to remove the group ids and
+     clear the "S" bit that represents these ids. Symbolic link of /usr/bin/cc by
+     executing "file /usr/bin/cc". The shell displayed that the path was a symbolic
+      link to 'gcc', so the file gcc is the one that is actually executed.
+      5)The symbolic mode g-s means that we remove permissions for the group ids
+      from execution in the file. I tested this by creating an arbitrary file called
+       Matthew. From here, I executed "chmod g+s Matthew" to make Matthew give
+       permissions for group ids in the file which set the "S" bit when I called
+       "ls - l Matthew". Then, I used "chmod g-s Matthew" to remove the group ids and
+        clear the "S" bit that represents these ids.
+	6) I searched the man page for find and under the -daystart option, I saw
+	 another option called -mtime that would allow me to see any files that I
+	  modified n days ago. Using the general structure "find -mtime -<n>", I was
+	  able to plug in n = 3 to get "find -mtime -3" as the term I used to search for
+	   files modified (-mtime checks modified files) 3 days ago.
+	   7) I made sure that I was in my root directory so I did "cd /". Once I was in
+	    the root directory, I wanted to find all the files in the last 3 days, so I
+	    made sure I used -3 to denote it included everything within the past 3 days.
+	     The corresponding command was "find . -mtime -3 -type d". Many of the
+	     directories said "Permission denied", and three of these directories that
+	     were:
+	     1. ./usr/local/cs/.del
+	     2. ./usr/local/cs
+	     3. ./proc/6946/net/rpc
+	     8) I first wanted the location of "find", and to do this, I typed in the
+	      command "whereis find". I saw that it was located in /bin, so I changed the
+	       directory to bin with the command "cd /bin". From there, I typed in the
+	       command "find -type l" because I wanted to find all the symbolic links.
+	        In total, I counted 18 files that were symbolic links.
+		   1. ./awk
+		      2. ./mail
+		         3. ./gtar
+			    4. ./sh
+			       5. ./csh
+			          6. ./ypdomainname
+				     7. ./traceroute6
+				        8. ./view
+					   9. ./domainname
+					      10. ./dnsdomainname
+					         11. ./nisdomainname
+						    12. ./ex
+						       13. ./rnano
+						          14. ./iptables-xml
+							     15. ./rview
+							        16. ./iptables-xml-1.4.7
+								   17. ./rvi
+								      18. ./ksh
+								      9) I first changed my directory into /usr/lib by doing "cd /usr/lib". Then, I
+								       used the command "ls -l -t" because I wanted to organize the listed items in
+								        chronological order with the oldest files at the bottom. I found the oldest
+									 file to be libsqlite3.so.0.8.6 on the date Nov 24 2009.
+									 10) Using the man page for "locale", I found in the 2nd paragraph of the
+									  description that locale's data depends on its current locale environment
+									   defined by the LC_* environment variables.
+									   11) I typed in "emacs" to get into emacs on the terminal. Then, I enter
+
+* System calls are expensive and can hurt library.
+* To avoid system call overhead, use equivalent library functions
+- getchar, putchar vs. read, write (for standard I/O)
+- fopen, fclose vs. open, close (for file I/O), etc.
+
+Unbuffered vs. Buffered I/O
+* Unbuffered
+- Every byte is executed (read/written) by the kernel through a system call
+
+* Buffered
+- collect as many bytes as possible (in a buffer) and read more than a single
+byte (into buffer) at a time and use one system call.
+
+Reading from a file makes the assumtion that reads are consecutive. We assume
+you will not jump around in a file.
+

@@ -1,0 +1,109 @@
+Part 1
+Lauren Samy provided a good detailed list of the steps to set up the EC2 
+environment on CCLE, so I just followed everything on there. My public DNS was
+"ec2-52-10-199-134.us-west-2.compute.amazonaws.com". Lauren also included 
+instructions on how to log on to puTTy for this homework assignment, so I am 
+not going to go into too much detail here on the setup.
+
+To ssh into the EC2 server, I downloaded PuTTYgen off of the Internet and I
+followed Lauren's instructions from the link "http://docs.aws.amazon.com/
+AWSEC2/latest/UserGuide/putty.html". However, this was giving me a lot of 
+problems and it appeared to me that Lauren and Tai-Lin were giving conflicting
+instructions. Needless to say, I was growing increasingly frustrated. It turns
+out that I had to use 32-bit instead of the 64-bit version I was previously
+using; I was fuming. 
+
+Anyways, I redid the steps except with a 32-bit version, with the instance ID 
+i-e3877bee. The public DNS was "ec2-52-11-132-149.us-west-2.compute.amazonaws.
+com". This still did not work and I was getting really, really angry. I looked
+over the Piazza posts again and I think I had to run it from Remote Desktop on
+SEASNet using Tai-Lin's method. 
+
+I logged in to Remote Desktop onto my SEASNet account. I then did "ssh -i key.
+pem ubuntu@[public IP from ec2 instance page], where "key.pem" as the key I 
+downloaded from EC2. My "key.pem" was "Matthew.pem" and my public IP was "52.
+11.132.149". It still didn't work when I ran "ssh -i Matthew.pem ubuntu@52.11.
+132.149". Needless to say, after 5 hours of doing this, I was really freaking
+pissed off. I felt like breaking my computer....
+
+I asked another friend and he said to disregard everything Lauren said about
+security groups because it was flat-out incorrect for this assignment. I did 
+what he told me to do, which entailed selecting my own IP address and creating
+my own security group. 
+
+I created a new key pair like I did twice before, and I called it 
+"Assignment_4.pem". My public DNS for this instance was "ec2-52-11-218-85.us-
+west-2.compute.amazonaws.com". After, I went into "Security Groups" -> 
+"Inbound", and then selected my custom made security group, and I edited it to
+make sure it used "My IP". I then did the puTTYgen stuff like before, using my
+"Assignment_4.pem" file and saving my private key as "Assignment_4.ppk". IT 
+FINALLY WORKED!!!! 
+
+The exact line I typed in to log in to PuTTy was "ubuntu@ec2-52-11-218-85.us-
+west-2.compute.amazonaws.com" and I used the following path as my private key 
+file for authentication "C:\Users\Darthpwner\Desktop\Assignment_4.ppk". I 
+then waited with anticipation if maybe fourth time was truly the charm. It was
+:) !!! I started screaming with joy and thanked every deity known to man. 
+HALLELUJAH! I had to go to a cousin's birthday party so I tried to log back in
+to make sure it worked. It did and I breathed a sigh of relief. Two days worth
+of pain was finally alleviated.
+
+Back to the assignment; I had to install "emacs" using "sudo apt-get install 
+emacs"
+
+Part 2
+To be honest, I got really angry in Part 1 and decided to do this first because
+it seemed more theoretial in nature. I have listed below the different entries
+in the CERT Vulnerability Notes Database listed on the assignment page. The 
+metric I used to assess the urgency of vulnerability is from the CVSS Metrics 
+obtained from the CERT Vulnerability Notes Database. I have numbered them off 
+and will use that as a shorthand reference to each vulnerability.
+
+1) VU#695940 (2015-02-13) Henry Spencer regular expressions (regex) library 
+contains a heap overflow vulnerability
+2) VU#787252 (2015-02-13) Microsoft Windows domain-configured client Group 
+Policy fails to authenticate servers
+3) VU#967332 (2015-01-28) GNU C Library (glibc) __nss_hostname_digits_dots() 
+function vulnerable to buffer overflow
+4) VU#976132 (2015-01-05) Some UEFI systems do not properly secure the EFI S3 
+Resume Boot Path boot script
+5) VU#252743 (2014-09-25) GNU Bash shell executes commands in exported 
+functions in environment variables
+
+I will describe the urgency of each vulnerability and justify the urgency 
+assignments below in numerical order:
+1) Low; Only in the worst case can arbitrary code be executed. This means that
+the harmful effects are usually much more mild. We did this when first 
+overrunning the server in the lab, and it caused our program to crash but 
+nothing more malicious than that. It is very unlikely that a hacker could gain
+access to private information. It is also likely going to affect only 32-bit 
+operating systems, so 64-bit machines should be safe. 
+2) High; this critical flaw is EXTREMELY dangerous because this causes an
+authentication failure that could allow an attacker to run scripts of their 
+choice and bring a server to its knees. It is also remotely exploitable so this
+exploit means that no place is safe if this vulnerability is exposed. Since, a
+remote, unauthenticated attacker can execute arbitrary code AND completely
+compromise the system, I feel this is arguably the most susceptible 
+vulnerability.
+3) High; this bug can be reached both locally and remotely using a rather 
+simple buffer overflow condition. Since this is relatively common, it is very
+alarming and can cause disaster for the afflicted victim. The buffer overflow
+occurs in the __nss_hostname_digits_docs() function of the GNU C Library and
+since we use this very often, any system predating glibc-2.17 are vulnerable.
+applying a patch of glibc-2.18 will get rid of this issue so this is the issue
+of least concern in my opinion.
+4) Medium; this attack gives an attacker the ability to arbitrarily read or 
+write to the SMRAM region and corrupt the platform firmware, causing the system
+to become inoperable. This has extremely dire consequences but the caveat is 
+that the attacker has to be authenticated and local, and it appears they have
+to have physical access to cause an attack, which is why I rate this as having
+a medium urgency.
+5) High; this attack will wreak absolute havoc on UNIX-like operating systems
+like Linux and Mac OS X. This is especially dangerous because this is one of 
+the major pitfalls for Mac or Linux users since they generally are better 
+protected against viruses and malware than Windows PC users. It is highly 
+dangerous and urgent because the Internet relies a lot on Bash and Unix, so 
+nearly every computer user is vulnerable to this attack. Since the attacker can
+cause damage from nearly anywhere through the privilege level of the calling
+application, I would rate this among the top two most urgent vulnerabilities 
+alongside vulnerability #2.

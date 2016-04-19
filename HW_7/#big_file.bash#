@@ -1,0 +1,5 @@
+
+#!/bin/bash
+truncate -s 1G big_file.txt
+#!/bin/bash
+truncate -s 1G big_file.txt

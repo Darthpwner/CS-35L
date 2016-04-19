@@ -1,0 +1,133 @@
+1. I used the command "git clone git://git.savannah.gnu.org/diffutils.git" from
+the main Savannah repository to get a copy of the Diffutils repository.
+2. Next, I first changed into the Diffutils' master branch using "cd diffutils"
+and ran the "git log" command to see the log of changes to the file. In order 
+to put the changes into the file "git-log.txt", I used the command "git log > 
+git-log.txt"
+3. I ran "git tag" and saw a list of version tags under the format 
+v<tag_version>. Then, I put this into the file "git-tags.txt" by using "git tag
+> git-tags.txt"
+4. To find the hash_value, I ran "git log" and searched using for the commit on
+the spec by using "/maint: quote". Scrolling up 4 lines, I found the hash_value
+to be "62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f". I grabbed it from vim by 
+right-clicking, then I exited vim using ":q". While in terminal, I ran "git 
+show 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f", which took me directly to Prof.
+Eggert's commit. To put it into the file, I used the command "git show 
+62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f > quote-patch.txt". 
+
+5. The command needed for checkout a version on the repository is "git checkout
+v3.0 -b <BranchName>, and in this case, <BranchName> was diffutils. Hence, I
+used the command "git checkout v3.0 -b diffutils" to switch into a new branch
+'diffutils'.
+6. I had to set up bootstrap correctly in this step, but I had trouble simply 
+putting "./bootstrap", so I looked up piazza and saw that I had to include
+"export HELP2MAN=/usr/local/cs/bin/help2man". Then, I copied the source into 
+a new directory called diffutils-3.0 by first making the directory "mkdir 
+diffutils-3.0" and then calling "cp -r ~/CS_35L/HW_4/diffutils/src ~/CS_35L/
+HW_4/diffutils-3.0". After this, I checked my "diffutils" directory and ran
+the following commands as mentioned on Piazza. "./bootstrap" -> "cd ~" -> 
+"wget http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz" -> "tar -xzvf 
+gperf-3.0.4.tar.gz" -> "cd gperf-3.0.4" -> "./configure" -> "export PATH=$PATH
+:u/cs/ugrad/linm/gperf-3.0.4/src" -> "make" -> "make check". 
+
+I had problems applying the patch because I had difficulty memorizing the 
+syntax for applying this patch. I initially thought it was in the format 
+"patch -p < quote-patch.txt" but this gave me an error saying "option requires
+ an argument -- 'p'". I had to use the command "patch -p1 < quote-patch.txt" 
+to apply the patch to version 3.0. I was prompted "File to patch:" for the 
+files called "HACKING", "diffutils.texi", and "help2man", but I skipped these 
+patches by typing RETURN and selecting "y" for a total of 3 times. I then got 
+a long block of command results that said if a "Hunk #<number>" was successful
+ at a certain line.
+7. I ran "git status" and saw a list of files that were "Changed but not 
+updated", and I noticed that this included files that did not have a ".c" 
+header. There were a total of 10 files that in "Changed but not updated" that I
+needed to revert. For the "Untracked files", there was an extensive list of
+files that I was not really concerned with since these files would not be 
+reverted. A mistake I made was that I initially thought I had to use "git 
+checkout -- <file>" to revert changes, but then I later realized I had to use
+Emacs commands to revert all the changes, which I did in the next two steps. 
+8. I read the documentation provided on the CS 35L webpage for Assignment 4, 
+and I learned that "vc-diff" (C-x v =) is used in Emacs to compare the changes
+that were made from the original file to the current file whose changes are to
+be reverted. This creates a diff file (hence the command name). The command 
+"vc-revert" (C-x v u) is used to discard changes that were made in the patch. 
+I tested this first on the file "README" and I checked how to use "describe-
+mode" (C-h m) and searched the documentation to learn how to use the "diff" 
+commands in Emacs and I saw that I could use 27 commands. The commands "diff-
+apply-hunk" (C-c C-a) applies a hunk (a contiguous chunk of text with one or 
+more modified lines) to its target file. The command "diff-goto-source" 
+(C-c C-c) will go to the source file and line corresponding to the hunk.
+ 
+9. I opened each of the non ".c" files using "emacs <file_name>" and first ran
+vc-diff (C-x v =) to see the changes that the patch applied on these files. I 
+did not want to make any changes on non ".c" files, so I ran the command for
+vc-revert (C-x v u), which would always prompt me to "Discard changes in 1 
+files? (yes or no)". I selected "yes" an this caused the changes to be 
+discarded. I followed these steps on a total of 9 non .c files. 
+
+For the .c files, I manually changed all .c files that had comments with the 
+patch updating all single quotations from a backtick. This process was very
+tedious and I first ran vc-diff using "C-x v =" while in Emacs and noted the
+lines where there were changes in the comments. I learned I could use C-c C-a 
+y to make the changes immediately for the non .c files. 
+
+The command that I used to go directly to a line was "M-g g"  and I changed 
+all specified cases in the patches of single quotes (') to a backtick (`) 
+except in two cases for side.c where I instead changed double quotes into two 
+single quotes (''). In side.c, I also had to delete two periods. Overall, this
+ was very annoyingly tedious and I made an error the first time so I had to 
+run through all the code again, but in the end, I called "git status" and saw 
+that there were six files that were changed but not updated. It read as 
+follows:
+
+modified:   src/cmp.c
+modified:   src/diff.c
+modified:   src/diff3.c
+modified:   src/dir.c
+modified:   src/sdiff.c
+modified:   src/util.c
+
+10. I first ran the command "emacs src/*.c.rej" and it opened up a rejected 
+files of diff and diff3. I opened up both "diff" and "diff3" in Emacs and used
+M-g g to search each line that was marked in the matches and manually changed
+the backticks (`) to single quotation marks (').
+11. I remove 24 files that were untracked by using "rm <file_name>". Normally,
+I could have used "git clean" to remove files, but that command normally 
+deletes ALL files in my directory, including important files I am modifying, so
+I had to remove these unwanted files in a laborious manner. For "#NEWS#", I had
+to use "rm "#NEWS#"" because command line did not recognize the file. To make 
+things easier, I pressed TAB after inputting a certian amount of the file path
+to autofill the rest.
+12. Using "git status" gave me a half-dozen modified files and "git diff" did
+output a patch that was 344 lines long. To check the number of lines in my 
+file, I created a file called "check_lines" and I ran "git diff > check_lines"
+and ran Emacs to check. To put the patch into "quote-3.0-patch.txt", I used
+"git diff > quote-3.0-patch.txt".
+13. After reading the commands described in "README-hacking", I ran 
+"./bootstrap" in diffutils. I had to set my path because apparently my .login file in my home directory was not working, so I had to repeat my commands used 
+earlier in Step 6 to construct my path. I returned to my "diffutils" directory
+ where I was working, and then I was able to run "./configure", which will 
+configure the build, "make", which makes the files, and "make check", which 
+leaves the directories. When I run "./diff . -", it gives me a correct output 
+because it says "./diff: cannot compare '-' to a directory", which is correct 
+behavior since the first single quotation mark replaced the backtick. Running 
+the "./diff -- help" command shows the file that I modified and it appears at 
+a first glance that all the backticks have been successfully changed to single 
+quotations, so it appears that both "./diff . -" and "./diff --help" both do 
+the correct thing. 
+14. I changed back into my home directory with "cd .." and I used the move 
+command "mv diffutils diffutils-3.0" to move the contents of diffutils into
+the diffutils-3.0 directory. I cloned the original directory by using the 
+command in Step 1 ("git clone git://git.savannah.gnu.org/diffutils.git"). 
+I did "cd diffutils-3.0" and switched the branch to v3.0 using "git checkout
+v3.0 -b diffutils-3.0". I initially had problems with this, but then I was able
+to go back to the home directory with "cd" and I moved diffutils into
+diffutils-3.0 once more ("mv diffutils diffutils-3.0") and applied "diff -pru
+diffutils-3.0 diffutils-3.0-patch >quote-diffutils diffutils-3.0").
+15. I went into my "diffutils-3.0-patch" directory and used "mv quote-3.0-patch
+~" to move the patch in the same file as where quote-3.0-test.txt is located.
+I changed into the home directory and ran "diff quote-3.0-test.txt quote-3.0
+-patch.txt > diff". When I looked at "diff" using "emacs diff", I noticed
+some differences between the two files but the changes were innocuous and very
+ small.

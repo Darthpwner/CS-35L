@@ -1,0 +1,385 @@
+I first copied the patch using CTRL-C from the CS 35L Winter 2015 webpage and
+I pasted it onto a file I created via emacs called "lab.patch". I then ran the
+command "wget http://www.cs.ucla.edu/classes/winter15/cs35L/assign/sthttpd-2.
+27.0.tar.gz" to grab the zipped folder. To unzip the file, I ran "tar xvf 
+sthttpd-2.27.0.tar.gz", which subsequently listed out all the files stored in
+the original zip folder.
+
+After changing my directory to "sthttpd-2.27.0" via "cd sthttpd-2.27.0", I ran
+"patch -p1 < ../lab.patch". However, I was getting an error when I ran this 
+line, which gave the following error message:
+
+patching file src/thttpd.c
+patch unexpectedly ends in middle of line
+Hunk #1 FAILED at 1604.
+1 out of 1 hunk FAILED -- saving rejects to file src/thttpd.c.rej
+
+To fix this problem, I changed the line "hc->read_size - hc->read_idx );" to
+"hc->read_size );" manually by going into my "src" directory and running Emacs
+on "thttpd.c" and going to line 1607 and making this change.
+
+After setting everything up, I performed the steps numbered 1 through 9 on the
+webpage.
+
+1) While inside the "sthttpd-2.27.0" directory, I ran "./configure" to create 
+all the necessary files and configure them properly. I then ran "make" to 
+build "sthttpd" with the patch applied. After doing this, I changed to the 
+"src" via the command "cd src". From here, I had to run the executable 
+"thttpd" on a port; the command was "./thttpd -p <port>". I chose the port 
+"12169" and performed a simple request using "wget http://localhost:
+portnumber", where my "portnumber" was 12169. Running this command yielded
+the following output:
+
+--2015-03-04 10:19:22--  http://localhost:12169/
+Resolving localhost... 127.0.0.1
+Connecting to localhost|127.0.0.1|:12169... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: “index.html”
+
+    [ <=>                                   ] 2,680       --.-K/s   in 0.009s
+
+2015-03-04 10:19:22 (298 KB/s) - “index.html” saved [2680]
+
+2) I ran "./thttpd -p 12169" again to verify that my web server works in the 
+normal case. Then, I checked my process id (pid) for thttpd by running "ps 
+aux | grep thttpd", which printed all the users who were logged on to my 
+server. This yielded the output shown below:
+
+linm       456  0.0  0.0  15476  1452 ?        Ss   10:12   0:00 ./thttpd -p 
+12169
+mayerski   485  0.0  0.0  15492  1460 ?        Ss   10:17   0:00 ./thttpd -p 
+12155
+linm       680  0.0  0.0 103252   848 pts/3    S+   10:23   0:00 grep thttpd
+kristen   2242  0.0  0.0  15480  1512 ?        Ss   Mar03   0:00 ./thttpd -p 
+12108
+kel       4931  0.0  0.0  15504  1476 ?        Ss   Mar03   0:00 ./thttpd -p 
+12324
+xuzh     23467  0.0  0.0  15476  1492 ?        Ss   08:30   0:00 ./thttpd -p 
+23456
+classath 28966  0.0  0.0  15488  1508 ?        Ss   Mar03   0:00 ./thttpd -p 
+12128
+classath 31479  0.0  0.0 191380 14564 ?        S    Mar03   0:00 gdb thttpd 
+28966
+classlha 31632  0.0  0.0  15488  1480 ?        Ss   Mar03   0:00 ./thttpd -p 
+8080
+
+3) I then ran under gdb using the line "gdb thttpd 12169". I then ran a 2nd 
+terminal with the same lnxsrv for both, which happened to be lnxsrv04 in my 
+case. On the 2nd terminal, I changed to the path "~/CS_35L/HW_9/sthttpd-2.27.0
+/src" because this is where I my 1st terminal's path was located. Then, I sent
+a crashing request with the wget command using "wget http://localhost:12169/$(
+awk 'BEGIN {while (c++<4000) printf "A"}')".
+
+Running this command gave the http path with about 8k number of A's and the 
+following error: 
+
+Connecting to localhost|127.0.0.1|:12169... failed: Connection refused.
+Resolving localhost... 127.0.0.1
+Connecting to localhost|127.0.0.1|:12169... failed: Connection refused.
+
+The reason for this error is because I misinterpreted what exactly the "pid"
+was when I ran the "ps aux | grep thttpd" command. I initially made a bad 
+assumption that my port was my pid, so running "gdb thttpd 12169" would not 
+work. I reran "thttpd -p 12169" and then "ps aux | grep thttpd". The output was
+similar to the one above with the list of users, but this time, my actual pid 
+was "1336". Hence, I ran "gdb thttpd 1336", which was able to run the debugger
+successfully because I was able to input the command "c" and continue 
+execution. Afterwards, I tried to perform the crashing request via wget on my 
+2nd terminal, and this caused a segmentation fault as follows:
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000000318cc79afd in _int_malloc () from /lib64/libc.so.6
+
+4) I asked Ruolin for advice on what to do next and he suggested I run the 
+command "bt" in my gdb window. I followed his advice and ran the backtrace 
+command, and this gave me a list of all the errors when executing it on the 
+second window. For me, I got 11 errors, all shown below:
+
+#0  0x000000318cc79afd in _int_malloc () from /lib64/libc.so.6
+#1  0x000000318cc7a346 in calloc () from /lib64/libc.so.6
+#2  0x000000318cc6ef2d in open_memstream () from /lib64/libc.so.6
+#3  0x000000318cce4a1b in __vsyslog_chk () from /lib64/libc.so.6
+#4  0x000000318cc7048e in __libc_message () from /lib64/libc.so.6
+#5  0x000000318cc75e66 in malloc_printerr () from /lib64/libc.so.6
+#6  0x000000318cc7b937 in _int_realloc () from /lib64/libc.so.6
+#7  0x000000318cc7baf5 in realloc () from /lib64/libc.so.6
+#8  0x0000000000406498 in httpd_realloc_str (strP=0x262eb10,
+    maxsizeP=0x262eb18, size=<value optimized out>) at libhttpd.c:715
+#9  0x00000000004047e7 in handle_read (argc=<value optimized out>,
+    argv=<value optimized out>) at thttpd.c:1600
+#10 main (argc=<value optimized out>, argv=<value optimized out>)
+    at thttpd.c:806
+
+5) To answer this question, I referenced Sharath's and Ruolin's lectures as 
+well as the article "Smashing the stack for fun and profit" by Elias Levy. The 
+article in particular brought up a very good point; if we overwrite 
+preexisting code and change the return address of a function, we can run a test
+value first, compile our program, and start gdb to find the location of our
+return address. Once we know this information, we can point the return address
+to other parts of the source code and potentially wreak havoc. There is example
+code in the article that demonstrates an exploit that I could use to overwrite
+the return address and make it execute arbitrary code.
+
+example3.c:
+------------------------------------------------------------------------------
+void function(int a, int b, int c) {
+   char buffer1[5];
+   char buffer2[10];
+   int *ret;
+
+   ret = buffer1 + 12;
+   (*ret) += 8;
+}
+
+void main() {
+  int x;
+
+  x = 0;
+  function(1,2,3);
+  x = 1;
+  printf("%d\n",x);
+}
+------------------------------------------------------------------------------
+
+This code adds 12 to buffer1[]'s address to where the return value is stored, 
+and from here, I could exploit the bug in the modified thttpd to try to run 
+arbitrary code on the web server.
+
+6) The GCC -fstack-protector option will help protect against stack-based 
+attacks, but not against heap-based attack. Looking at Sharath's and Tai-Lin's
+slides, I ran the following two commands inside the "src" folder to generate 
+assembly language code for thttpd.c twice.
+
+1. "gcc -m32 -c -S -o thttpd-nostackprot.s -fno-stack-protector -I . -I .. 
+thttpd.c
+2. "gcc -m32 -c -S -o thttpd-stackprot.s -fstack-protector -I . -I .. thttpd.c"
+
+Next, I ran a diff command to compare the two assembly-language files; the 
+exact command was "diff -u thttpd-nostackprot.s thttpd-stackprot.s". This 
+printed an extremely large output of changes between the two files onto the 
+console. Based on the diff information, it appears to me that 
+"thttpd-stackprot.s" is actually less efficient than "thttpd-nostackprot.s" 
+based on when I compared the two files in Emacs. The file "thttpd-stackprot.s"
+injects other instructions and functions and adds additional assembly code, so
+while there is increased protection from stack overflow attacks, this comes at
+the additional cost of decreased efficiency.
+
+The shell command that I wrote to invoke "diff" was as follows:
+"diff -aur thttpd-nostackprot.s thttpd-stackprot.s | grep stack". This 
+produced the following diff output:
+
+--- thttpd-nostackprot.s        2015-03-04 11:30:11.885681000 -0800
++++ thttpd-stackprot.s  2015-03-04 11:30:30.044160000 -0800
++       call    __stack_chk_fail
++       call    __stack_chk_fail
++       call    __stack_chk_fail
++       call    __stack_chk_fail
+
+It appears to me that the assembly language file "thttpd-stackprot.s" can be
+used to prevent stack exploits but not heap exploits; "thttpd-stack.s" will 
+have a random canary inserted after the local variables to act as temporary 
+space that can get replaced and indicate that the file was corrupted in the 
+case of a stack-based overflow. In the case of a heap-based attack, we really
+do not have a defense mechanism to protect us and prevent my exploit from being
+able to access the buffer region of the heap.
+
+7) AddressSanitizer is far more effective than GCC's -fstack-protector because
+it "finds use-after-free and {heap,stack,global}-buffer overflow bugs in C/C++
+programs." This means that all types of buffer overflow bugs are covered, 
+unlike "-fstack-protector" which can only protect against stack overflow bugs.
+
+I first tried running the command "make CC="gcc -m32" \ CLAGS="-fsanitize=
+address -fstack-protector" \ LDFLAGS="-Xlinker --rpath=/usr/local/cs/gcc-$(gcc
+ -dumpversion)/lib". However, it gave me an error that I was stuck on for two
+days, so I got really annoyed. I had exhausted all of my resources and looked 
+on Piazza if anyone had this problem since none of the slides adequately 
+explained this problem. I asked my friend for some tips, and he said I had to 
+run "make clean" first. This printed the output to the console:
+
+test -z "libmatch.a" || rm -f libmatch.a
+test -z "thttpd" || rm -f thttpd
+rm -f *.o
+
+I also noticed a Piazza post about a specific error: 
+
+cc1: error: unrecognized command line option "=fsanitize=address"
+
+I followed the steps to rectify this issue by using a newer version of gcc. To
+accomplish this, I ran "export PATH=/usr/local/cs/bin:$PATH". 
+
+I then ran the command on the webpage once more and it finally worked! To 
+reiterate, I ran "make CC="gcc -m32" \ CLAGS="-fsanitize=address -fstack-
+protector" \ LDFLAGS="-Xlinker --rpath=/usr/local/cs/gcc-$(gcc -dumpversion)/
+lib" and this built the patched version thttpd with "-fsanitize=address 
+-fstack-protector". I then repeated the process of trying to crash the server 
+that I did in steps 3 and 4. I opened up a different window and made sure that
+both were running on "lnxsrv04". I made sure to ran "make clean" and "make CC=
+"gcc -m32" \ CLAGS="-fsanitize=address -fstack-protector" \ LDFLAGS="-Xlinker 
+--rpath=/usr/local/cs/gcc-$(gcc -dumpversion)/lib" on the second window. 
+
+I first ran "ps aux | grep thttpd" in order to find my new process id. In this
+case, my process id was "8178", so I ran "gdb thttpd 8178" on the window I 
+chose to be the gdb terminal. 
+
+This time, it prompted me the following: 
+
+"---Type <return> to continue, or q <return> to quit ---return"
+
+In this case, I typed "return" and pressed ENTER, and then I entered "c" to 
+continue debugging.
+
+On my second window, I ran the command "wget http://localhost:12169/$(awk 
+'BEGIN {while (c++<4000) printf "A"}')" like I did earlier. This produced the
+following output in my crashing window: 
+
+Resolving localhost... 127.0.0.1
+Connecting to localhost|127.0.0.1|:12169... failed: Connection refused.
+
+In my first gdb window, it produced the exit code: "[Inferior 1 (process 8178)
+exited with code 01]". When I ran the backtrace "bt" command, it output on the
+gdb window "No stack."
+
+8) I repeated the process in step 6 except I also used the "-fsanitize=address 
+-fstack-protector" option. I ran "gcc -m32 -c -S -o thttpd-sanitize.s 
+-fsanitize=address -fstack-protector -I . -I .. thttpd.c" and this produced an
+assembly language code for thttpd.c with AddressSanitizer. I ran the diff 
+command "diff -u thttpd-sanitize.s thttpd.stackprot.s", and from the output,
+it is very evident that the "thttpd-sanitize.s" file is far less efficient 
+because there are a lot more lines of assembly code than "thttpd.stackprot.s".
+This is because the sanitizer file does a lot more error checking to ensure the
+buffer is not overflowing.
+
+9) Valgrind does not work with the -fsanitize option, so I had to reconfigure
+it again without that option and call make again. I did this with the following
+series of commands. "make clean" -> "cd .." -> "./configure" -> "make" -> "cd 
+src". Upon completing these five commands, I had a version of "thttpd" without
+the -fsanitize option, so now I ran a command that I found on Lauren's slides:
+"valgrind --leak-check=yes ./thttpd -p <port_number>", where <port_number> was
+"12169" in my case. This outputs the following: 
+
+[linm@lnxsrv04 ~/CS_35L/HW_9/sthttpd-2.27.0/src]$ valgrind --leak-check=yes ./
+thttpd -p 12169
+==3261== Memcheck, a memory error detector
+==3261== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==3261== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==3261== Command: ./thttpd -p 12169
+==3261==
+==3261==
+==3261== HEAP SUMMARY:
+==3261==     in use at exit: 0 bytes in 0 blocks
+==3261==   total heap usage: 12 allocs, 12 frees, 3,318 bytes allocated
+==3261==
+==3261== All heap blocks were freed -- no leaks are possible
+==3261==
+==3261== For counts of detected and suppressed errors, rerun with: -v
+==3261== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+[linm@lnxsrv04 ~/CS_35L/HW_9/sthttpd-2.27.0/src]$ ==3264==
+==3264== HEAP SUMMARY:
+==3264==     in use at exit: 28,672 bytes in 5 blocks
+==3264==   total heap usage: 27 allocs, 22 frees, 49,938 bytes allocated
+==3264==
+==3264== LEAK SUMMARY:
+==3264==    definitely lost: 0 bytes in 0 blocks
+==3264==    indirectly lost: 0 bytes in 0 blocks
+==3264==      possibly lost: 0 bytes in 0 blocks
+==3264==    still reachable: 28,672 bytes in 5 blocks
+==3264==         suppressed: 0 bytes in 0 blocks
+==3264== Reachable blocks (those to which a pointer was found) are not shown.
+==3264== To see them, rerun with: --leak-check=full --show-reachable=yes
+==3264==
+==3264== For counts of detected and suppressed errors, rerun with: -v
+==3264== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+
+The problem was that this got stuck in an infinite loop; I had to use a 
+different port number from my previous one "12169". The reason for this problem
+is because I need to overwrite my port and since it's a separate method, the
+compiler interprets the two as different methods of "12169" and attempts to 
+keep both. To rectify this issue, I ran "valgrind --leak-check=yes ./thttpd -p
+12326" and this ran to completion without any issues. The output was as 
+follows:
+
+==31445== Memcheck, a memory error detector
+==31445== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==31445== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==31445== Command: ./thttpd -p 12326valgrind --leak-check=yes ./thttpd -p 12326
+==31445==
+usage:  ./thttpd [-C configfile] [-p port] [-d dir] [-r|-nor] [-dd data_dir] 
+[-s|-nos] [-v|-nov] [-g|-nog] [-u user] [-c cgipat] [-t throttles] [-h host] 
+[-l logfile] [-i pidfile] [-T charset] [-P P3P] [-M maxage] [-V] [-D]
+==31445==
+==31445== HEAP SUMMARY:
+==31445==     in use at exit: 0 bytes in 0 blocks
+==31445==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==31445==
+==31445== All heap blocks were freed -- no leaks are possible
+==31445==
+==31445== For counts of detected and suppressed errors, rerun with: -v
+==31445== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+
+Upon completing this step, the rest of the steps were repeats of steps 3 and 4.
+I used "ps aux | grep httpd" as before and found my process id to be "31794".
+The steps are listed as follows using two windows, (1) one running gdb and (2)
+the other using wget to crash the server. The number on the left refers to the
+window I am describing using the key in the previous sentence.
+
+(1) gdb thttpd 31794
+(1) c
+(2) wget http://localhost:12326/$(awk 'BEGIN {while (c++<4000) printf "A"}')
+(1) c
+
+This produced the following output in the debugging window:
+
+Continuing.
+==24408== Syscall param read(buf) points to unaddressable byte(s)
+==24408==    at 0x36F2ADB4C0: __read_nocancel (in /lib64/libc-2.12.so)
+==24408==    by 0x405029: main (thttpd.c:1605)
+==24408==  Address 0x4c6ce41 is 0 bytes after a block of size 2,001 alloc'd
+==24408==    at 0x4A06C20: realloc (vg_replace_malloc.c:662)
+==24408==    by 0x406D29: httpd_realloc_str (libhttpd.c:715)
+==24408==    by 0x405001: main (thttpd.c:1600)
+==24408==
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000000003803ec04 in ?? ()
+(gdb) c
+Continuing.
+--24408-- VALGRIND INTERNAL ERROR: Valgrind received a signal 11 (SIGSEGV) - 
+exiting
+--24408-- si_code=80;  Faulting address: 0x0;  sp: 0x402f04de0
+
+valgrind: the 'impossible' happened:
+   Killed by fatal signal
+==24408==    at 0x3803EC04: vgPlain_arena_malloc (m_mallocfree.c:291)
+==24408==    by 0x3800386A: vgMemCheck_realloc (mc_malloc_wrappers.c:490)
+==24408==    by 0x3807A0AD: vgPlain_scheduler (scheduler.c:1673)
+==24408==    by 0x380A5A29: run_a_thread_NORETURN (syswrap-linux.c:103)
+
+sched status:
+  running_tid=1
+
+Thread 1: status = VgTs_Runnable
+==24408==    at 0x4A06C20: realloc (vg_replace_malloc.c:662)
+==24408==    by 0x406D29: httpd_realloc_str (libhttpd.c:715)
+==24408==    by 0x405001: main (thttpd.c:1600)
+
+
+Note: see also the FAQ in the source distribution.
+It contains workarounds to several common problems.
+In particular, if Valgrind aborted or crashed after
+identifying problems in your program, there's a good chance
+that fixing those problems will prevent Valgrind aborting or
+crashing, especially if it happened in m_mallocfree.c.
+
+If that doesn't help, please report this bug to: www.valgrind.org
+
+In the bug report, send all the above text, the valgrind
+version, and what OS and version you are using.  Thanks.
+
+
+Program exited with code 01.
+
+Based on the results of debugging session, it appears that Valgrind is quite 
+useful for memory debugging to find memory leaks, use of uninitialized memory,
+heap/stack buffer overrun, and profiling. This means it can be used as a 
+valuable tool to prevent buffer overruns like AddressSanitize.

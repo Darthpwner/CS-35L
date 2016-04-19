@@ -1,0 +1,24 @@
+Description:
+Username <--> uid and groupname <--> gid conversions, with cache for speed.
+
+Files:
+lib/idcache.c
+lib/idcache.h
+m4/idcache.m4
+
+Depends-on:
+flexmember
+xalloc
+
+configure.ac:
+gl_IDCACHE
+
+Makefile.am:
+
+Include:
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

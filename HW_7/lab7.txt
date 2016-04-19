@@ -1,0 +1,177 @@
+1) I first ran Emacs to create a C program called "catb.c". This version of cat
+used standard library functions to copy all the bytes in standard input to 
+standard output. Sharath essentially gave my lab section the source code for 
+both "catb.c" and "catu.c", but I understand how the logic works; we are 
+using an int variable called "buffer" that gets each character from standard 
+input until we reach the end of the file. While we are in this loop, "putchar"
+is putting a byte on a stdout stream. In this case, "getchar" and "putchar" 
+are equivalent to the system calls "read" and "write", respectively.
+
+2) Sharath also gave our section the source code to replicate the "cat" 
+command using system calls, so I ran Emacs, created the file "catu.c", and 
+followed his example. The differences between the files "catu.c" and "catb.c" 
+were that in "catu.c", the variable "buffer" was of type "char" and we used
+system calls "read" and "write" instead of "getchar" and "putchar". The system
+calls "read" and "write" have the following function prototypes:
+
+ssize_t read (int fildes, void *buf, size_t nbyte);
+ssize_t write (int fildes, const void *buf, size_t nbyte);
+
+"int fildes" is a file descriptor using a commonly accepted range of ints
+from 0 to 2, where 0 represents "stdin", 1 represents "stdout", and 2 
+represents "stderr". "void *buf" is the starting memory address of the buffer
+where we want to read from or write to. "size_t nbyte" is the number of bytes 
+we want to read from or write to.
+
+Using this information, the while condition that Sharath gave us reads standard
+input (stdin) starting from whatever buffer we pass in. We read one character 
+at a time until we reach the end of the file (represented by a return value 
+that is greater than 0). Inside the while loop, we are writing one character 
+at a time to standard output (stdout) starting from the buffer we passed in.
+
+3) I attended Tai-Lin Chu's lecture and he shared a quick and easy method to
+create an extremely large file. This method entailed creating a .bash file that
+I made using "emacs big_file.bash". The exact source code was as follows:
+
+#!/bin/bash
+truncate -s 5M big_file.txt
+
+This created a 5 megabyte file of all null bytes ("\0") with the -s flag 
+specifying the size of the file. I changed the permissions of the file to make
+it an executable via "chmod u+x big_file.bash" and I ran the executable as 
+"./big_file.bash". This created a new .txt file called "big_file.txt", and to 
+check the size of the file to ensure that it contains at least 5,000,000 
+bytes, I ran "ls -l". I saw that the file contained "5,242,880 bytes", so I 
+this file satisfied the requirment in the spec. I would use "big_file.txt" for
+steps 3 and 4 of the lab.
+
+I ran the following four commands and I will describe each command in more 
+detail below:
+1. "strace ./catu < big_file.txt > output"
+2. "strace ./catu < big_file.txt" 
+3. "strace ./catb < big_file.txt > output"
+4. "strace ./catb < big_file.txt"
+
+For each command, I grabbed the last four to six lines and will explain what 
+each line means.
+
+1. 
+read(0, "\0", 1)                        = 1
+write(1, "\0", 1)                       = 1
+read(0, "\0", 1)                        = 1
+write(1, "\0", 1)                       = 1
+read(0, "", 1)                          = 0
+
+Each read command takes in 0 as the file descriptor because it is reading in
+standard input (stdin), the starting memory address of the buffer is at a null
+byte "\0", and the number of bytes read each time is "1". The int value on the
+right side of the equal sign (=) is the number of bytes successfully read or 
+written, so the code executed successively in all the cases I had passed in. 
+The last "read" line is different because there were no more characters to 
+read in, which explains why the starting memory address was an empty string 
+(""). Hence, the int value returned was 0.
+
+2.
+read(0, "\0", 1)                        = 1
+write(1, "\0", 1)                       = 1
+read(0, "\0", 1)                        = 1
+write(1, "\0", 1)                       = 1
+read(0, "", 1)                          = 0
+
+The output to the console when I ran "strace ./catu < big_file.txt" was 
+identical to the output when I ran "strace ./catu < big_file.txt > output". The
+reason for this is because both the "output" file and my terminal interpret the
+read and write commands one character at a time.
+
+3. 
+read(0, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+..., 65536) = 65536
+write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+..., 65536) = 65536
+read(0, "", 65536)                      = 0
+write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+..., 65536) = 65536
+
+The major differences between commands 3 and 4 versus commands 1 and 2 were 
+that the "catb" commands (commands 3 and 4) did not separate each starting 
+address into a single null byte, but rather interpreted the starting address as
+a long block of null bytes that read the whole string at once rather than one
+character at a time. The number of bytes read or written each time was 
+"65536" and each read line or write line successively interpreted all 65536 
+bytes. 
+
+4.
+write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+..., 1024) = 1024
+read(0, "", 65536)                      = 0
+write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+..., 1024) = 1024
+
+When not outputting to a file, the read and write commands when executing catb
+only processed 1024 bytes instead of all 65536 bytes in the command above. This
+suggests that the terminal cannot process as much information at a time as an
+actual file such as the "output" file where I redirected the output of catb to.
+The effect is not as noticeable when running the system call commands in 
+catu, but it is extremely noticeable when running the standard library commands
+in catb as shown in this example.
+
+4) To measure the speed of the programs when (a) copying one file to another, 
+and (b) when copying a file to my terminal, I ran the "time" command on both
+catu and catb when outputting to a file and when copying to the terminal. I ran
+a total of 4 "time" commands to test this part of the Lab, and the commands are
+as follows:
+
+1. "time ./catu < big_file.txt > output"
+2. "time ./catu < big_file.txt" 
+3. "time ./catb < big_file.txt > output"
+4. "time ./catb < big_file.txt"
+
+The timings of each are listed below.
+
+1. real    0m5.676s
+   user    0m0.244s
+   sys     0m5.361s
+
+2. real    0m8.852s
+   user    0m0.300s
+   sys     0m8.545s
+
+3. real    0m0.241s
+   user    0m0.153s
+   sys     0m0.008s
+
+4. real    0m1.602s
+   user    0m0.210s
+   sys     0m0.026s
+
+When ranking the times from slowest to fastest, we have the following order:
+"time ./catu < big_file.txt", "time ./catu < big_file.txt > output", "time 
+./catb < big_file.txt", "time ./catb < big_file.txt > output". The first two 
+commands are the catu commands, which entail a lot of system calls. Since there
+is a lot of overhead involved when performing system calls due to 
+"privilege switching", this slows down performance and is the main explanation
+for why it took longer to execute the catu commands. On the other hand, catb 
+commands rely on standard library functions "getchar" and "putchar" to take 
+the place of "read" and "write", respectively, and these two standard library 
+functions perform a lot of implicit optimization that speeds up performance,
+which explains why they are a lot faster, relatively, when compared to the catu
+commands.
+
+Note that the "user" and "sys" times do not necessarily add up to the "real" 
+time; the sum of "user" and "sys" can be less than, greater than, or equal to 
+the "real" time, so there is no exact correlation. The time that should be 
+noted is "real" time, which is the total time elapsed. The times represented by
+"user" and "sys" indicate the time spent by the CPU executing in user space and
+the time spent by the CPU executing in the kernel space, respectively.
+
+An interesting fact to note is that the "time" command executes more quickly
+when copying to the "output" file than when it copies the file to my terminal.
+This can be explained from the case when I ran "strace ./catb < 
+big_file.txt > output" and compared the number of bytes processed against 
+"strace ./catb < big_file.txt". When I copy to the file "output", there is a
+significant increase in the number of bytes I can process: 65536 bytes when
+copying to "output" versus 1024 bytes when copying to terminal. This provides
+tangible evidence for the speed increase when copying to a file.
+
+
+

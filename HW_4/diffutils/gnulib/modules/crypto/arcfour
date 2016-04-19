@@ -1,0 +1,24 @@
+Description:
+ARCFOUR stream cipher implementation
+
+Files:
+lib/arcfour.h
+lib/arcfour.c
+m4/arcfour.m4
+
+Depends-on:
+stdint
+
+configure.ac:
+gl_ARCFOUR
+
+Makefile.am:
+
+Include:
+"arcfour.h"
+
+License:
+LGPLv2+
+
+Maintainer:
+Simon Josefsson

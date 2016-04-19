@@ -1,0 +1,26 @@
+Description:
+Retrieving the file descriptor of an open directory stream.  (Unportable.)
+
+Files:
+lib/dirfd.c
+m4/dirfd.m4
+
+Depends-on:
+dirent
+errno
+extensions
+
+configure.ac:
+gl_FUNC_DIRFD
+gl_DIRENT_MODULE_INDICATOR([dirfd])
+
+Makefile.am:
+
+Include:
+<dirent.h>
+
+License:
+LGPLv2+
+
+Maintainer:
+Jim Meyering

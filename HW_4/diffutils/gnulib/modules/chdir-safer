@@ -1,0 +1,29 @@
+Description:
+like chdir, but safer
+
+Files:
+lib/chdir-safer.h
+lib/chdir-safer.c
+m4/chdir-safer.m4
+
+Depends-on:
+errno
+fchdir
+fcntl-h
+open
+same-inode
+stdbool
+
+configure.ac:
+gl_CHDIR_SAFER
+
+Makefile.am:
+
+Include:
+"chdir-safer.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

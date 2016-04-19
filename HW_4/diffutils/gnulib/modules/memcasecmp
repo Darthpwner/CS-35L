@@ -1,0 +1,23 @@
+Description:
+Case-insensitive memory area comparison.
+
+Files:
+lib/memcasecmp.h
+lib/memcasecmp.c
+m4/memcasecmp.m4
+
+Depends-on:
+
+configure.ac:
+gl_MEMCASECMP
+
+Makefile.am:
+
+Include:
+"memcasecmp.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

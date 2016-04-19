@@ -1,0 +1,24 @@
+Description:
+Concatenate two arbitrary file names.
+
+Files:
+lib/filenamecat.h
+lib/filenamecat-lgpl.c
+m4/filenamecat.m4
+
+Depends-on:
+dirname-lgpl
+
+configure.ac:
+gl_FILE_NAME_CONCAT_LGPL
+
+Makefile.am:
+
+Include:
+"filenamecat.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering
